@@ -14,7 +14,12 @@ import {
   VForm,
   VTextField,
   VSelect,
-  VCheckbox
+  VCheckbox,
+  VDatePicker,
+  VMenu,
+  VDialog,
+  VStepper,
+  VDivider
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -32,7 +37,12 @@ Vue.use(Vuetify, {
     VForm,
     VTextField,
     VSelect,
-    VCheckbox
+    VCheckbox,
+    VDatePicker,
+    VMenu,
+    VDialog,
+      VStepper,
+      VDivider
 
   }
 })

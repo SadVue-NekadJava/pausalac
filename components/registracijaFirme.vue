@@ -1,9 +1,9 @@
 <template lang="html">
-  <div class="" v-if="!novafaktura">
-    <h2  >Nova Faktura</h2>
+  <div class="text-xs-center" >
+
 
     <form class="forma mt-3 elevation-6 pa-3">
-
+  <h1  >Registracija</h1>
       <v-text-field
         v-model="imeFirme"
         :error-messages="nameErrors"
@@ -119,7 +119,7 @@
       },
 
       data: () => ({
-        novafaktura:false,
+
         imeFirme: '',
         punNaziv: '',
         pib: '',

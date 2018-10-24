@@ -1,5 +1,7 @@
 export const state = () => ({
-  sidebar: false
+  sidebar: false,
+  steps: 3,
+   step: undefined
 })
 
 export const mutations = {

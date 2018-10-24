@@ -3,7 +3,7 @@
     <div class="main">
 
 
-    <v-navigation-drawer class="opacity" temporary
+    <v-navigation-drawer  class="opacity" temporary
       :mini-variant.sync="miniVariant"
       :clipped="clipped"
       v-model="drawer"
@@ -28,7 +28,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-toolbar class="opacity elevation-15" fixed app :clipped-left="clipped">
+    <v-toolbar v-if="logged" class="opacity elevation-15" fixed app :clipped-left="clipped">
       <v-toolbar-side-icon
        class="hidden-md-and-up" @click="drawer = !drawer">
      </v-toolbar-side-icon>
@@ -55,6 +55,7 @@
   export default {
     data () {
       return {
+        logged:false,
         clipped: false,
         drawer: false,
         fixed: false,
