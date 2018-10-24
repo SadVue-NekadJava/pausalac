@@ -1,0 +1,96 @@
+<template>
+  <v-app >
+    <div class="main">
+
+
+    <v-navigation-drawer class="opacity" temporary
+      :mini-variant.sync="miniVariant"
+      :clipped="clipped"
+      v-model="drawer"
+      fixed
+      app
+    >
+      <v-list>
+        <v-list-tile
+          router
+          :to="item.to"
+          :key="i"
+          v-for="(item, i) in items"
+          exact
+        >
+          <v-list-tile-action>
+            <v-icon v-html="item.icon"></v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-toolbar class="opacity elevation-15" fixed app :clipped-left="clipped">
+      <v-toolbar-side-icon
+       class="hidden-md-and-up" @click="drawer = !drawer">
+     </v-toolbar-side-icon>
+      <v-toolbar-title><router-link to="/" tag="span" style="cursor:pointer;">Pausalac</router-link></v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items class="hidden-sm-and-down">
+        <v-btn flat v-for="(item,i) in items" :key="i" :to="item.to"><v-icon left>{{item.icon}}</v-icon>{{item.title}}</v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+    <v-content>
+      <v-container>
+        <nuxt />
+      </v-container>
+    </v-content>
+
+    <v-footer class="opacity" :fixed="fixed" app>
+      <span>&copy; {{ new Date().getFullYear() }}</span>
+    </v-footer>
+      </div>
+  </v-app>
+</template>
+
+<script>
+  export default {
+    data () {
+      return {
+        clipped: false,
+        drawer: false,
+        fixed: false,
+        items: [
+          { icon: 'description', title: 'Fakture', to: '/Fakture' },
+          { icon: 'folder_special', title: 'Porez', to: '/Porez' },
+            { icon: 'account_box', title: 'Komitenti', to: '/Komitenti' },
+                    { icon: 'local_hospital', title: 'Zdravstvene knjizice', to: '/ZKnjizice' },
+                            { icon: 'business', title: 'Moja Firma', to: '/MojaFirma' },
+        ],
+        miniVariant: false,
+        right: true,
+        rightDrawer: false,
+        title: 'Vuetify.js'
+      }
+    }
+  }
+</script>
+
+<style >
+html{
+  font-family: 'Patua One', cursive;
+}
+.opacity{
+  opacity:0.85;
+}
+
+.main{
+  background-image: url('../assets/officeBg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  width:100%;
+  min-height: 100vh;
+}
+
+
+</style>
