@@ -14,14 +14,11 @@
 
   <v-stepper-items >
     <v-stepper-content step="1">
-      <h1>Korisnicki podaci</h1>
+      <h1>Korisnik</h1>
       <v-card class="mb-5" color="grey lighten-5"></v-card>
       <v-layout row wrap>
         <v-flex xs8 offset-xs2>
           <v-form>
-            <!-- <v-flex xs5>
-              <v-text-field name="name" label="Korisnicko ime"></v-text-field>
-            </v-flex> -->
             <v-flex xs8>
               <v-text-field name="" label="Email"></v-text-field>
             </v-flex>
@@ -43,20 +40,21 @@
         </v-flex>
       </v-layout>
       <v-btn color="primary" @click="e1 = 2">
-        Continue
+        Nastavi
       </v-btn>
-
-      <v-btn flat>Cancel</v-btn>
     </v-stepper-content>
 
     <v-stepper-content step="2">
-      <v-card class="mb-5" color="grey lighten-1" height="200px"></v-card>
+      <v-card class="mb-5">
+
+
+      </v-card>
       <v-btn color="primary" @click="e1 = 3">
-        Continue
+        Nastavi
 
       </v-btn>
 
-      <v-btn @click="e1--" flat>Back</v-btn>
+      <v-btn @click="e1--" flat>Nazad</v-btn>
 
     </v-stepper-content>
 
@@ -64,10 +62,10 @@
       <v-card class="mb-5" color="grey lighten-1" height="200px"></v-card>
 
       <v-btn color="primary" @click="register">
-        Submit
+        Potvrdi
       </v-btn>
 
-      <v-btn @click="e1--" flat>Back</v-btn>
+      <v-btn @click="e1--" flat>Nazad</v-btn>
     </v-stepper-content>
   </v-stepper-items>
 </v-stepper>
