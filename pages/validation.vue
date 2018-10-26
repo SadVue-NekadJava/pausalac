@@ -1,13 +1,13 @@
 <template>
 <div>
   <div class="navChat">
-    <div class="text-center pt-2"><img src="../assets/logoHOme.png" height="70" style="line-height:80px;" alt=""></div>
+    <div class="text-center pt-2"></div>
   </div>
   <div class="container">
     <div class="omot">
     <h1 class="text-center naslov">{{msg}}</h1>
     <router-link to="/mainPage" ><div class="text-center"><button type="button" class="btn btn-outline-primary" name="button">Login</button></div></router-link>
-    <footer-meeting></footer-meeting>
+
   </div>
   </div>
 </div>
@@ -16,11 +16,11 @@
 
 <script>
 
-import Navbar from '../components/navbar.vue'
+
 
 export default {
   components:{
-    'nav-bar': Navbar
+
   },
   data() {
     return {
