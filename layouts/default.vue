@@ -36,6 +36,7 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn flat v-for="(item,i) in items" :key="i" :to="item.to"><v-icon left>{{item.icon}}</v-icon>{{item.title}}</v-btn>
+<v-btn @click="logout" color="secondary">logout</v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
@@ -55,7 +56,7 @@
   export default {
     data () {
       return {
-        logged:false,
+        logged:this.$store.state.logged,
         clipped: false,
         drawer: false,
         fixed: false,
@@ -70,6 +71,40 @@
         right: true,
         rightDrawer: false,
         title: 'Vuetify.js'
+      }
+    },
+
+
+    computed: {
+     log1 () {
+       return this.$store.state.logged;
+
+     }
+   },
+   watch: {
+     log1 (newCount, oldCount) {
+this.logged= newCount;
+       console.log(newCount);
+     }
+
+  },
+
+    mounted(){
+      if(  window.localStorage.getItem("sessionid")!=null){
+      this.$store.commit('change');
+      console.log(this.$store.state.logged);
+      this.logged=this.$store.state.logged;
+      }
+    },
+    methods:{
+      logout(){
+        axios.get("http://837s121.mars-e1.mars-hosting.com/logout",{
+                      params:{ sid: localStorage.getItem('sessionid')  }
+                     }).then(response => {
+
+                     });
+        localStorage.removeItem('sessionid');
+        this.logged=false;
       }
     }
   }

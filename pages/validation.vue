@@ -5,7 +5,7 @@
     <v-flex xs8 offset-xs2 class=" forma fleks">
       <h1 class="hidden-md-and-down display-3 ">{{msg}}</h1>
         <h1 class="hidden-lg-and-up display-1 mt-3">{{msg}}</h1>
-        <v-btn  color="primary  ">Login</v-btn>
+        <v-btn   color="primary  ">Login</v-btn>
     </v-flex>
   </v-layout>
   </v-container>
@@ -52,7 +52,6 @@ export default {
 .lejaut{
   height:80vh;
 }
-
 .pozadina{
   position:absolute;
   top:0;
@@ -60,9 +59,5 @@ export default {
   height:100vh;
   width:100vw;
   background:rgba(0, 0, 0, 0.7);
-
-  z-index: 1;
-
-
 }
 </style>
