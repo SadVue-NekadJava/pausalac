@@ -1,6 +1,6 @@
 <template>
   <v-app >
-    <div class="main">
+    <div class="main ">
 
 
     <v-navigation-drawer  class="opacity" temporary
@@ -92,6 +92,10 @@ html{
   width:100%;
   min-height: 100vh;
 }
-
+.forma {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  border: 1px solid light-green;
+}
 
 </style>

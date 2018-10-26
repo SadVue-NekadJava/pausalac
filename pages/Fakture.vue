@@ -178,9 +178,5 @@ export default {
 
 }
 
-.forma {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
-  border: 1px solid light-green;
-}
+
 </style>

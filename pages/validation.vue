@@ -1,15 +1,14 @@
 <template>
-<div>
-  <div class="navChat">
-    <div class="text-center pt-2"></div>
-  </div>
-  <div class="container">
-    <div class="omot">
-    <h1 class="text-center naslov">{{msg}}</h1>
-    <router-link to="/mainPage" ><div class="text-center"><button type="button" class="btn btn-outline-primary" name="button">Login</button></div></router-link>
-
-  </div>
-  </div>
+<div class="pozadina" >
+  <v-container  >
+  <v-layout row wrap class="lejaut align-center text-xs-center" >
+    <v-flex xs8 offset-xs2 class=" forma fleks">
+      <h1 class="hidden-md-and-down display-3 ">{{msg}}</h1>
+        <h1 class="hidden-lg-and-up display-1 mt-3">{{msg}}</h1>
+        <v-btn  color="primary  ">Login</v-btn>
+    </v-flex>
+  </v-layout>
+  </v-container>
 </div>
 
 </template>
@@ -46,61 +45,24 @@ export default {
 }
 </script>
 
-<style scoped>
-.navChat {
-
-  width: 100vw;
-  height: 80px;
-
-
+<style scoped >
+.fleks{
+  height:20vh;
 }
-.naslov {
-  text-transform: uppercase;
-margin-top:30vh;
-}
-.btn-outline-primary {
-margin-top: 20px;
-border: 1px solid #6ab4d1;
-color: black;
-font-weight: 600;
-width: 100px;
-position: relative;
-overflow: hidden;
-border-radius: 20px;
-transition: 2s padding ease;
-  text-decoration: none;
-
-}
-.btn-outline-primary:focus {
-  outline-style: none;
-  box-shadow: none;
+.lejaut{
+  height:80vh;
 }
 
-.btn-outline-primary::before {
-  position: absolute;
-  background: #6ab4d1;
-  top: 50%;
-  content: '';
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-  transition: 1s all ease;
-  z-index: -1;
-  width: 100%;
-  height: 0;
-}
+.pozadina{
+  position:absolute;
+  top:0;
+  left:0;
+  height:100vh;
+  width:100vw;
+  background:rgba(0, 0, 0, 0.7);
 
-.btn-outline-primary:hover::before {
-  height: 1500%;
-  background: #6ab4d1;
-  color: #fff;
+  z-index: 1;
 
 
-}
-
-.btn-outline-primary:hover {
-  border-radius: 50px;
-  transition: 0.5s all ease;
-  text-decoration: none;
-  color:#fff;
 }
 </style>
