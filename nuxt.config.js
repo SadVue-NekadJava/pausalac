@@ -13,6 +13,9 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
       {rel: 'stylesheet',href:'https://fonts.googleapis.com/css?family=Patua+One'}
+    ],
+    script:[
+      { src:'https://unpkg.com/axios/dist/axios.min.js'}
     ]
   },
   plugins: ['~/plugins/vuetify.js',  { src: '~plugins/vuelidate', ssr: false }],

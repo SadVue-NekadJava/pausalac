@@ -8,10 +8,7 @@
         </v-text-field>
         <v-btn large color="primary mt-3">Login</v-btn>
         <v-layout row wrap class="mb-0">
-
-
         <v-flex xs8 class="mb-0">
-
         </v-flex>
         <v-flex xs4>
             <v-btn @click="registerUser=!registerUser" small color="secondary mt-5 mb-0">Register</v-btn>
@@ -20,7 +17,6 @@
       </v-form>
     </v-flex>
   </v-layout>
-
   <v-layout row wrap v-if="registerUser">
     <v-flex xs10 offset-xs1 md8 offset-md2 class="mt-4">
       <v-stepper class="forma" v-model="e1">
@@ -77,14 +73,14 @@
                       <v-radio label="Muski" value="1"></v-radio>
                       <v-radio label="Zenski" value="2"></v-radio>
                     </v-radio-group>
-                    <v-select :items="gradovi" v-model="korGrad" label="Izaberite Grad"></v-select>
-                    <v-select :items="opstine" v-model="korOpstina" label="Izaberite Opstinu"></v-select>
+                    <v-select :items="gradovi" name="grad" item-text="naziv" item-value="id"  v-model="korGrad" label="Izaberite Grad"></v-select>
+                    <v-select :items="opstine" name="opstina" item-text="naziv" item-value="id" v-model="korOpstina" label="Izaberite Opstinu"></v-select>
                     <v-text-field class="mb-4" v-model="korAdresa" :rules="[rules.required]" label="Adresa "></v-text-field>
                   </v-form>
                 </v-flex>
               </v-layout>
             </v-card>
-            <v-btn color="primary" @click="e1 = 3">
+            <v-btn color="primary" @click="probna">
               Nastavi<v-icon right>arrow_right_alt</v-icon>
             </v-btn>
             <v-btn @click="e1--" flat>Nazad</v-btn>
@@ -92,7 +88,6 @@
           <v-stepper-content step="3">
             <v-card class="mb-5">
               <form class="forma mt-3 pa-3">
-
                 <v-text-field v-model="imeFirme" :rules="[rules.required]" label="Ime Firme"></v-text-field>
                 <v-text-field v-model="punNaziv" :rules="[rules.required]" label="Pun naziv sa resenja"></v-text-field>
                 <v-text-field v-model="pib" mask="#########" :counter="9" :rules="[rules.required,rules.tacnoPib]" label="Pib"></v-text-field>
@@ -108,8 +103,8 @@
                   </v-date-picker>
                 </v-dialog>
                 <v-text-field v-model="racun" mask="###-#############-##" label="Broj Ziro racuna"></v-text-field>
-                <v-select :items="gradovi" v-model="grad" label="Izaberite grad"></v-select>
-                <v-select :items="opstine" v-model="opstina" label="Izaberite opstinu"></v-select>
+                <v-select :items="gradovi" name="grad" item-text="naziv" item-value="id"  v-model="grad" label="Izaberite grad"></v-select>
+                <v-select :items="opstine" name="opstina" item-text="naziv" item-value="id" v-model="opstina" label="Izaberite opstinu"></v-select>
                 <v-text-field v-model="adresa" label="Adresa"></v-text-field>
                 <v-text-field v-model="email" label="E-mail"></v-text-field>
                 <v-text-field v-model="telefon" label="Telefon"></v-text-field>
@@ -134,6 +129,7 @@ export default {
       registerUser:false,
       loginEmail: '',
       loginPassword: '',
+
       usrEmail: '',
       password: '',
       passwordConfirm: '',
@@ -167,8 +163,13 @@ export default {
       menu: false,
       modal: false,
       menu2: false,
-      gradovi: ['Beograd', 'Leskovac', 'Smederevo', 'Dodaj novi'],
-      opstine: ['Dorcol', 'Novi Beograd', 'Vracar', 'Palilula'],
+      gradovi: [
+        {id:3, naziv:'Beograd'},
+        {id:2,naziv:'Leskovac'},
+        {id:1,naziv:'Smederevo'},
+        {id:0,naziv:'Dodaj novi'}
+      ],
+      opstine: [{id:1,naziv:'Novi Beograd'},{id:2,naziv:'Vracar'} ,{id:3,naziv:'Palilula'}  ],
       show1: false,
       show2: false,
       rules: {
@@ -181,7 +182,46 @@ export default {
     }
   },
   methods: {
-    register() {}
+
+    probna(){
+      // this.e1 = 3;
+      console.log(this.korGrad);
+      console.log(this.korOpstina);
+    },
+    register() {
+      axios.post("http://837s121.mars-e1.mars-hosting.com/register",{
+  mejl:this.usrEmail,
+sifra:this.password,
+ponovoSifra:this.passwordConfirm,
+ime:this.korIme,
+prezime:this.korPrezime,
+srednjeIme:this.korImeOca,
+jmbg:this.korJmbg,
+strucnaSprema:this.korSprema,
+uRadnomOdnosu:this.zaposlen,
+pol:this.korPol,
+opstina:this.korOpstina,
+adresa:this.korAdresa,
+grad:this.korGrad,
+naziv:this.imeFirme,
+punNaziv:this.punNaziv,
+pib:this.pib,
+maticniBroj:this.matBroj,
+ziroRacun:this.racun,
+sifraDelatnosti:this.sifraDelatnosti,
+opisDelatnosti:this.opisDelatnosti,
+datumRegistracije:this.date,
+adresaFirme:this.adresa,
+telefon:this.telefon,
+mejlFirme:this.email,
+opstinaFirme:this.opstina
+                    }).then(response => {
+                        console.log(response);
+
+
+                    });
+
+    }
   }
 }
 </script>
