@@ -19,7 +19,8 @@ import {
   VMenu,
   VDialog,
   VStepper,
-  VDivider
+  VDivider,
+  VRadioGroup 
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -41,8 +42,9 @@ Vue.use(Vuetify, {
     VDatePicker,
     VMenu,
     VDialog,
-      VStepper,
-      VDivider
+    VStepper,
+    VDivider,
+    VRadioGroup
 
   }
 })
