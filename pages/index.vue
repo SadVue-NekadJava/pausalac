@@ -93,6 +93,7 @@
               <v-btn  :disabled="!validKorak1"  color="primary" @click="korak1">
                 Nastavi <v-icon right>arrow_right_alt</v-icon>
               </v-btn>
+              <v-btn @click="registerUser=!registerUser" flat>Povratak na login</v-btn>
             </v-flex>
           </v-stepper-content>
           <v-stepper-content step="2">
