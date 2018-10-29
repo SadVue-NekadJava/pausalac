@@ -25,6 +25,11 @@
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile @click="logout" class="secondary" >
+          <v-list-tile-action>
+          </v-list-tile-action>
+          <v-list-tile-title>Logout</v-list-tile-title>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
 
@@ -121,13 +126,14 @@ html{
 }
 
 .main{
-  background-image: url('../assets/officeBg.jpg');
+  background-image: url('../assets/officeBg1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: fixed;
   width:100%;
   min-height: 100vh;
+
 }
 .forma {
   background-color: rgba(255, 255, 255, 0.9);
