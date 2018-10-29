@@ -145,7 +145,7 @@
                     <v-btn     <v-btn :disabled="!validKorak2"  color="primary" @click="korak2">
                       Nastavi<v-icon right>arrow_right_alt</v-icon>
                     </v-btn>
-                    <v-btn  @click="e1--" >  Nazad</v-btn>
+                    <v-btn flat  @click="e1--" >  Nazad</v-btn>
                   </v-form>
                 </v-flex>
               </v-layout>
@@ -222,6 +222,7 @@
                 label="E-mail"></v-text-field>
                 <v-text-field
                 v-model="telefon"
+                mask="+(###)##-###-######"
                 :rules="obaveznoPoljeRules"
                 label="Telefon"></v-text-field>
                 <v-checkbox v-model="spreman" :rules="obaveznoPoljeRules"
