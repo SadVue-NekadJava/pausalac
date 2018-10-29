@@ -90,7 +90,7 @@
                         </div>
                 </v-form>
               </v-layout>
-              <v-btn  :disabled="!validKorak1"  color="primary" @click="/*korak1*/e1 = 2">
+              <v-btn  :disabled="!validKorak1"  color="primary" @click="korak1">
                 Nastavi <v-icon right>arrow_right_alt</v-icon>
               </v-btn>
             </v-flex>
@@ -145,7 +145,7 @@
                     <v-btn     <v-btn :disabled="!validKorak2"  color="primary" @click="korak2">
                       Nastavi<v-icon right>arrow_right_alt</v-icon>
                     </v-btn>
-                      @click="e1--" flat>Nazad</v-btn>
+                    <v-btn  @click="e1--" >  Nazad</v-btn>
                   </v-form>
                 </v-flex>
               </v-layout>
@@ -418,7 +418,7 @@ export default {
       }).then(response => {
         this.errorMsgRegister=response.data.msg;
         if(response.data.status){
-          this.$router.push('/home');
+          this.$router.push('/');
         }
 
 
