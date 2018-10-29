@@ -132,7 +132,7 @@
                     :counter="13"
                     label="Jbmg"></v-text-field>
                     <v-text-field v-model="korSprema" :rules="obaveznoPoljeRules" label="Strucna sprema"></v-text-field>
-                    <v-checkbox label="U radnom odnosu" v-model="zaposlen" value="true">
+                    <v-checkbox label="U radnom odnosu" v-model="zaposlen">
                     </v-checkbox>
                     <v-radio-group :rules="polRules" v-model="korPol" :mandatory="false">
                       <label class="labela mb-3">Pol</label>
@@ -362,6 +362,7 @@ export default {
     },
     korak2() {
        this.e1 = 3;
+
 
     },
     korak1(){
