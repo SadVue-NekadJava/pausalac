@@ -21,7 +21,8 @@ import {
   VStepper,
   VDivider,
   VRadioGroup,
-  VChip
+  VChip,
+  VDataTable
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -46,7 +47,8 @@ Vue.use(Vuetify, {
     VStepper,
     VDivider,
     VRadioGroup,
-    VChip
+    VChip,
+    VDataTable
 
   }
 })
