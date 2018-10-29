@@ -105,6 +105,8 @@ this.logged= newCount;
                      });
         localStorage.removeItem('sessionid');
         this.logged=false;
+        this.$router.push('/');
+              this.$store.commit('changeFalse');
       }
     }
   }

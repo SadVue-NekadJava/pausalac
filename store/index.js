@@ -16,5 +16,8 @@ export const mutations = {
   },
   change (state){
     state.logged=true;
+  },
+  changeFalse(state){
+    state.logged=false;
   }
 }
