@@ -139,13 +139,13 @@
                       <v-radio label="Muski" value="1"></v-radio>
                       <v-radio label="Zenski" value="2"></v-radio>
                     </v-radio-group>
-                    <v-select :items="gradovi" :rules="selectRules" name="grad" item-text="naziv" item-value="id" v-model="korGrad" label="Izaberite Grad"></v-select>
-                    <v-select :items="opstine" :rules="selectRules" name="opstina" item-text="naziv" item-value="id" v-model="korOpstina" label="Izaberite Opstinu"></v-select>
+                    <v-select :items="gradovi" :rules="selectRules" @change="spisakOpstinaKorisnik($event)" name="grad" item-text="gra_naziv" item-value="gra_id" v-model="korGrad" label="Izaberite Grad"></v-select>
+                    <v-select :items="opstine" :rules="selectRules" name="opstina" item-text="ops_naziv" item-value="ops_id" v-model="korOpstina" label="Izaberite Opstinu"></v-select>
                     <v-text-field class="mb-4" v-model="korAdresa" :rules="obaveznoPoljeRules" label="Adresa "></v-text-field>
-                    <v-btn     color="primary" @click="korak2">
+                    <v-btn     <v-btn :disabled="!validKorak2"  color="primary" @click="korak2">
                       Nastavi<v-icon right>arrow_right_alt</v-icon>
                     </v-btn>
-                      <v-btn :disabled="!validKorak2"  @click="e1--" flat>Nazad</v-btn>
+                      @click="e1--" flat>Nazad</v-btn>
                   </v-form>
                 </v-flex>
               </v-layout>
@@ -204,12 +204,14 @@
                 :items="gradovi"
                 :rules="obaveznoPoljeRules"
                  name="grad"
-                 item-text="naziv"
-                 item-value="id"
+                 item-text="gra_naziv"
+                 item-value="gra_id"
                  v-model="grad"
+                @change="spisakOpstinaFirma($event)"
+
                  label="Izaberite grad"></v-select>
-                <v-select :items="opstine" :rules="obaveznoPoljeRules"
- name="opstina" item-text="naziv" item-value="id" v-model="opstina" label="Izaberite opstinu"></v-select>
+                <v-select :items="opstineFirma" :rules="obaveznoPoljeRules"
+ name="opstina" item-text="ops_naziv" item-value="ops_id" v-model="opstina" label="Izaberite opstinu"></v-select>
                 <v-text-field
                 v-model="adresa"
                 :rules="obaveznoPoljeRules"
@@ -286,33 +288,9 @@ export default {
       menu: false,
       modal: false,
       menu2: false,
-      gradovi: [{
-          id: 3,
-          naziv: 'Beograd'
-        },
-        {
-          id: 2,
-          naziv: 'Leskovac'
-        },
-        {
-          id: 1,
-          naziv: 'Smederevo'
-        },
-        {
-          id: 0,
-          naziv: 'Dodaj novi'
-        }
-      ],
-      opstine: [{
-        id: 1,
-        naziv: 'Novi Beograd'
-      }, {
-        id: 2,
-        naziv: 'Vracar'
-      }, {
-        id: 3,
-        naziv: 'Palilula'
-      }],
+      gradovi: [],
+      opstine: [],
+      opstineFirma:[],
       show1: false,
       show2: false,
       passwordRules:[
@@ -348,7 +326,14 @@ export default {
     }
   },
   mounted(){
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getCity")
+    .then(response => {
+                  this.gradovi=response.data.gradovi;
+                  console.log(this.gradovi);
 
+
+
+                 });
     axios.get("http://837s121.mars-e1.mars-hosting.com/checkSid",{
                   params:{ sid: localStorage.getItem('sessionid')  }
                  }).then(response => {
@@ -360,6 +345,21 @@ export default {
                  });
   },
   methods: {
+
+    spisakOpstinaFirma(gradId){
+      axios.get("http://837s121.mars-e1.mars-hosting.com/getMunicipality",{
+                    params:{ gradId }
+                   }).then(response => {
+                      this.opstineFirma=response.data.opstine;
+                   });
+    },
+    spisakOpstinaKorisnik(gradId){
+      axios.get("http://837s121.mars-e1.mars-hosting.com/getMunicipality",{
+                    params:{ gradId }
+                   }).then(response => {
+                      this.opstine=response.data.opstine;
+                   });
+    },
     korak2() {
        this.e1 = 3;
 
@@ -403,7 +403,6 @@ export default {
         pol: this.korPol,
         opstina: this.korOpstina,
         adresa: this.korAdresa,
-        grad: this.korGrad,
         naziv: this.imeFirme,
         punNaziv: this.punNaziv,
         pib: this.pib,
