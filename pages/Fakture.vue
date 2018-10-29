@@ -1,5 +1,5 @@
 <template>
-<v-container>
+<v-container id="wrapper">
   <v-layout row wrap>
     <v-flex xs9>
       <v-expansion-panel popout class="  mt-3">
@@ -21,24 +21,20 @@
     </v-flex>
   </v-layout>
   <v-layout row wrap>
-    <v-flex xs8 class="fadeIn text-xs-center" v-if="!novafaktura">
-      <div class="">
-        <h1>Kreiraj Fakturu</h1>
-      </div>
+    <v-flex xs12 class="fadeIn text-xs-center" v-if="!novafaktura">
       <v-form class="forma pa-3">
         <h2>Br. Fakture: 107/18</h2>
-        <v-select light class="pa-3" :items="komitenti" v-model="value" label=" Komitent"></v-select>
-        <v-btn>Unesi novog Komitenta</v-btn>
+        <v-select @input="fakturaSelekt($event)" light class="pa-3" :items="komitenti" v-model="value" label=" Komitent"></v-select>
 
         <v-layout row wrap>
           <v-flex xs4>
 
-            <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent lazy full-width width="290px">
-              <v-text-field slot="activator" v-model="date" label="Datum izdavanja fakture " prepend-icon="event" readonly></v-text-field>
-              <v-date-picker v-model="date" scrollable>
+            <v-dialog ref="datumIzdavanja" :return-value.sync="datumIzdavanja" persistent lazy full-width width="290px">
+              <v-text-field slot="activator" v-model="datumIzdavanja" label="Datum izdavanja fakture " prepend-icon="event" readonly></v-text-field>
+              <v-date-picker v-model="datumIzdavanja" scrollable>
                 <v-spacer></v-spacer>
                 <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
-                <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+                <v-btn flat color="primary" @click="$refs.datumIzdavanja.save(datumIzdavanja)">OK</v-btn>
               </v-date-picker>
             </v-dialog>
           </v-flex>
@@ -46,24 +42,24 @@
           <v-flex xs4>
 
 
-            <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent lazy full-width width="290px">
-              <v-text-field slot="activator" v-model="date" label="Datum prometa " prepend-icon="event" readonly></v-text-field>
-              <v-date-picker v-model="date" scrollable>
+            <v-dialog ref="datumPrometa" :return-value.sync="datumPrometa" persistent lazy full-width width="290px">
+              <v-text-field slot="activator" v-model="datumPrometa" label="Datum prometa" prepend-icon="event" readonly></v-text-field>
+              <v-date-picker v-model="datumPrometa" scrollable>
                 <v-spacer></v-spacer>
                 <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
-                <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+                <v-btn flat color="primary" @click="$refs.datumPrometa.save(datumPrometa)">OK</v-btn>
               </v-date-picker>
             </v-dialog>
           </v-flex>
           <v-flex xs4>
 
 
-            <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent lazy full-width width="290px">
-              <v-text-field slot="activator" v-model="date" label="Datum valute " prepend-icon="event" readonly></v-text-field>
-              <v-date-picker v-model="date" scrollable>
+            <v-dialog ref="datumValute" :return-value.sync="datumValute" persistent lazy full-width width="290px">
+              <v-text-field slot="activator" v-model="datumValute" label="Datum valute " prepend-icon="event" readonly></v-text-field>
+              <v-date-picker v-model="datumValute" scrollable>
                 <v-spacer></v-spacer>
                 <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
-                <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+                <v-btn flat color="primary" @click="$refs.datumValute.save(datumValute)">OK</v-btn>
               </v-date-picker>
             </v-dialog>
           </v-flex>
@@ -81,38 +77,50 @@
 
 
       </v-flex>
+    </v-layout>
+    <v-layout row wrap justify-space-around>
 
 
-
-          <v-flex xs8>
-    <v-text-field label="Naziv usluge/proizvoda"></v-text-field>
-
-<v-flex xs12>
-  <v-text-field label="Jedinica mere"></v-text-field>
-  <v-text-field label="Kolicina"></v-text-field>
-  <v-text-field label="Jedinicna cena"></v-text-field>
-</v-flex>
-
-      </v-flex>
+          <v-flex lg2>
+            <v-text-field v-model="proizvodNazivUsluge" label="Naziv usluge/proizvoda"></v-text-field>
+          </v-flex>
+          <v-flex lg2>
+            <v-text-field v-model="proizvodKolicina" label="Kolicina"></v-text-field>
+          </v-flex>
+          <v-flex lg2>
+            <v-text-field v-model="proizvodJedinicaMere" label="Jedinica mere"></v-text-field>
+          </v-flex>
+          <v-flex lg2>
+            <v-text-field v-model="proizvodJedinicnaCena" label="Jedinicna cena"></v-text-field>
+          </v-flex>
+      </v-layout>
+      <v-layout row wrap justify-center>
+            <v-btn class="pa-2" color="success" @click="dodajProizvod()">Dodaj proizvod</v-btn>
+      </v-layout>
+      <v-layout row wrap>
+          <v-flex>
+            <v-data-table
+              :headers="headers"
+              :items="proizvodi"
+              hide-actions
+              class="elevation-1"
+            >
+              <tr slot="items" slot-scope="props">
+                <td>{{ props.index+1 }}</td>
+                <td class="text-xs-center">{{ props.item.nazivUsluge }}</td>
+                <td class="text-xs-center">{{ props.item.kolicina }}</td>
+                <td class="text-xs-center">{{ props.item.jedinicaMere }}</td>
+                <td class="text-xs-center">{{ props.item.jedinicnaCena }}</td>
+                <td class="text-xs-center">{{ props.item.ukupnaCena }}</td>
+              </tr>
+            </v-data-table>
+          </v-flex>
     </v-layout>
 
         <v-text-field label="Opis"></v-text-field>
 
 
       </v-form>
-
-
-      <!-- <RegistracijaFirme class="fadeIn" v-if="!novafaktura"/> -->
-    </v-flex>
-    <v-flex xs1>
-
-    </v-flex>
-    <v-flex xs3>
-<v-list class="forma mt-5">
-  <v-list-tile avatar>
-    <v-list-tile-title>title</v-list-tile-title>
-  </v-list-tile>
-</v-list>
     </v-flex>
   </v-layout>
 </v-container>
@@ -128,13 +136,16 @@ export default {
   data() {
     return {
       date: null,
+      datumIzdavanja: null,
+      datumPrometa: null,
+      datumValute: null,
       menu: false,
       modal: false,
       menu2: false,
       value: '',
       novafaktura: true,
       mesta:['Beograd','Leskovac','Smederevo','Dodaj novi'],
-      komitenti: ['Enon solutions', 'Zlatna Kasika', 'Grill Stefan', 'Poncho'],
+      komitenti: ['Enon solutions', 'Zlatna Kasika', 'Grill Stefan', 'Poncho','Unesi novog Komitenta'],
       fakture: [{
           id: '1',
           name: 'Enon Solutions',
@@ -153,13 +164,55 @@ export default {
           date: '25.05.2017',
           total: '514,35'
         },
-      ]
+      ],
+      proizvodNazivUsluge: '',
+      proizvodJedinicaMere: '',
+      proizvodKolicina: '',
+      proizvodJedinicnaCena:'',
+      headers: [
+          {
+            align: 'left',
+            sortable: false,
+            width: '10px'
+          },
+          { text: 'Naziv proizvoda', sortable: false},
+          { text: 'Jedinica mere', value: 'jedinicaMere' },
+          { text: 'Kolicina', value: 'kolicina' },
+          { text: 'Jedinicna cena', value: 'jedinicnaCena' },
+          { text: 'Ukupna cena', value: 'ukupnaCena' }
+        ],
+      proizvodi: []
+    }
+  },
+  methods:{
+    fakturaSelekt(faktura){
+      if(faktura==='Unesi novog Komitenta'){
+        alert(1);
+      }
+      else{
+        alert(2);
+      }
+    },
+    dodajProizvod(){
+      if(this.proizvodNazivUsluge==='' || this.proizvodJedinicaMere==='' || this.proizvodKolicina==='' || this.proizvodJedinicnaCena===''){
+        alert('Morate popuniti sve podatke vezane za proizvod!');
+      }
+      else{
+        var noviProizvod={
+          nazivUsluge: this.proizvodNazivUsluge,
+          jedinicaMere: this.proizvodJedinicaMere,
+          kolicina: this.proizvodKolicina,
+          jedinicnaCena: this.proizvodJedinicnaCena,
+          ukupnaCena: this.proizvodKolicina * this.proizvodJedinicnaCena
+        }
+        this.proizvodi.push(noviProizvod);
+      }
     }
   }
 
 }
 </script>
-<style>
+<style scoped>
 .fadeIn {
   animation: test 0.5s;
 
@@ -178,5 +231,16 @@ export default {
 
 }
 
-
+// GAZIM STILOVE SA DRUGIH FAJLOVA
+#wrapper{
+  box-sizing: content-box;
+}
+// STIL ZA TABELU
+th {
+  padding: 5px;
+}
+@media (min-width: 0)
+.flex.xs2 {
+  max-width: 20%;
+}
 </style>
