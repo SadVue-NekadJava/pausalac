@@ -24,7 +24,7 @@
     <v-flex xs12 class="fadeIn text-xs-center" v-if="!novafaktura">
       <v-form class="forma pa-3">
         <h2>Br. Fakture: 107/18</h2>
-        <v-select @input="fakturaSelekt($event)" light class="pa-3" :items="komitenti" v-model="value" label=" Komitent"></v-select>
+        <v-select @input="fakturaSelekt($event)" light class="pa-3" :items="komitenti" item-text="kom_naziv" item-value="kom_id" v-model="value" label=" Komitent"></v-select>
 
         <v-layout row wrap>
           <v-flex sm4>
@@ -158,7 +158,6 @@ export default {
       value: '',
       novafaktura: true,
       mesta:['Beograd','Leskovac','Smederevo','Dodaj novi'],
-      komitenti: ['Enon solutions', 'Zlatna Kasika', 'Grill Stefan', 'Poncho','Unesi novog Komitenta'],
       fakture: [{
           id: '1',
           name: 'Enon Solutions',
@@ -196,8 +195,22 @@ export default {
           { text: 'Ukloni stavku', value: 'ukloniStavku'}
         ],
       proizvodi: [],
-      ukupno: 0
+      ukupno: 0,
+      komitenti:[]
     }
+
+  },
+  mounted() {
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
+      params: {
+        sid: localStorage.getItem('sessionid')
+      }
+    }).then(response => {
+      this.komitenti = response.data.komitenti;
+      console.log(this.komitenti);
+
+
+    });
   },
   methods:{
     fakturaSelekt(faktura){
