@@ -15,7 +15,7 @@
         <v-select :items="komOpstine" :rules="obaveznoPoljeRules" name="opstina" item-text="ops_naziv" item-value="ops_id" v-model="komOpstina" label="Izaberite opstinu"></v-select>
         <v-text-field v-model="komAdresa" :rules="obaveznoPoljeRules" label="Adresa"></v-text-field>
         <v-text-field v-model="komEmail" label="E-mail"></v-text-field>
-        <v-text-field v-model="komTelefon" mask="+(###)##-###-######" :rules="obaveznoPoljeRules" label="Telefon"></v-text-field>
+        <v-text-field v-model="komTelefon" mask="+(###)##-###-######"  label="Telefon"></v-text-field>
 
         <v-btn :disabled="!valid" color="primary" @click="sacuvajNovogKomitenta">
           Sacuvaj
@@ -96,7 +96,7 @@ export default {
   methods: {
     sacuvajNovogKomitenta() {
       axios.post("http://837s121.mars-e1.mars-hosting.com/addNewComittent", {
-          params: {
+
             sid: localStorage.getItem('sessionid'),
             naziv: this.komImeFirme,
             punNaziv: this.komPunNaziv,
@@ -104,12 +104,12 @@ export default {
             ziroRacun: this.komRacun,
             adresaFirme: this.komAdresa,
             telefon: this.komTelefon,
-            mejlFirme: this.komEmail
-          }
+            mejlFirme: this.komEmail,
+            opstinaFirme:this.komOpstina
+
         })
         .then(response => {
-          this.gradovi = response.data.gradovi;
-          console.log(this.gradovi);
+        console.log(response.data);
 
 
 
