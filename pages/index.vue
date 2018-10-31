@@ -39,7 +39,7 @@
     </v-flex>
   </v-layout>
   <v-layout row wrap v-if="registerUser">
-    <v-flex xs10 offset-xs1 md8 offset-md2 class="mt-4">
+    <v-flex xs10 offset-xs1 md6 offset-md3 class="mt-4">
       <v-stepper class="forma" v-model="e1">
         <v-stepper-header>
           <v-stepper-step :complete="e1 > 1" step="1">Korisnik</v-stepper-step>

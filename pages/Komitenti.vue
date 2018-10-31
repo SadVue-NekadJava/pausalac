@@ -1,12 +1,26 @@
 <template>
 <v-container>
-  <v-btn @click="kreiranjeNovog" v-if="!kreirajNovog" color="secondary lighten-2" class="mb-4 mt-4">Dodaj novog komitenta</v-btn>
+  <v-flex xs6 offset-xs2>
+
+
+  <div v-if="idKomitentaZaBrisanje!=0" class="text-xs-center  modal pa-5">
+<h1>Da li ste sigurni da zelite da obrisete komitenta "{{komitentZaBrisanje}}"?</h1>
+<v-btn @click="brisanjeKomitentaPotvrdjeno" color="success">Da</v-btn>
+<v-btn @click="idKomitentaZaBrisanje=0" color="secondary">Ne</v-btn>
+  </div>
+  <div v-if="statusIzbrisanog" class="text-xs-center  modal pa-5">
+<h1>
+    Uspesno ste izbrisali komitenta {{komitentZaBrisanje}}
+</h1>
+  <v-btn @click="uspesnoBrisanje" color="primary">Ok</v-btn>
+  </div>
+  </v-flex>
   <transition name="animacijaForme">
-    <div class="forma text-xs-center" v-if="kreirajNovog">
+    <v-flex xs12 sm6 offset-sm3 class="forma text-xs-center" v-if="kreirajNovog">
 
 
 
-      <v-form v-if="kreirajNovog" ref="form" v-model="valid" class="forma mt-3 pa-3">
+      <v-form v-if="kreirajNovog" ref="form" v-model="valid" class="forma mt-3 pa-5">
         <v-text-field v-model="komImeFirme" :rules="obaveznoPoljeRules" label="Ime Firme"></v-text-field>
         <v-text-field v-model="komPunNaziv" :rules="obaveznoPoljeRules" label="Pun naziv sa resenja"></v-text-field>
         <v-text-field v-model="komPib" mask="#########" :counter="9" :rules="pibRules" label="Pib"></v-text-field>
@@ -23,12 +37,23 @@
         <v-btn @click="kreirajNovog=!kreirajNovog" class="secondary mb-4 mt-4" v-if="kreirajNovog">Odustani</v-btn>
 
       </v-form>
-    </div>
+    </v-flex>
   </transition>
   <transition name="animacijaListe">
-    <div v-if="!kreirajNovog" class="forma">
+    <v-flex xs12 md6 offset-md3 v-if="!kreirajNovog" class="forma">
+<v-layout row wrap>
 
-      <h1>Spisak Komitenata</h1>
+<v-flex xs2 md5 xl9>
+
+</v-flex>
+<v-flex xs3>
+  <v-btn @click="kreiranjeNovog" v-if="!kreirajNovog" color="secondary lighten-2" class="mb-4 mt-4">Dodaj novog komitenta</v-btn>
+
+</v-flex>
+</v-layout>
+
+
+      <h1 class="ml-5">Spisak Komitenata</h1>
       <v-expansion-panel class="pa-5">
         <v-expansion-panel-content v-for="(komitent,i) in komitenti" :key="i">
           <div slot="header">
@@ -43,12 +68,14 @@
               <h3 class="pt-2">Email: {{komitent.kom_mejl}}</h3>
               <h3 class="pt-2">Pib: {{komitent.kom_pib}} </h3>
               <h3 class="pt-2">Telefon: {{komitent.kom_telefon}}</h3>
+              <v-btn @click="izmeniKomitenta(komitent.kom_id)" color="warning">Izmeni</v-btn>
+              <v-btn @click="brisanjeKomitenta(komitent.kom_id,komitent.kom_naziv)" color="error">Obrisi</v-btn>
             </v-card-text>
           </v-card>
         </v-expansion-panel-content>
       </v-expansion-panel>
 
-    </div>
+    </v-flex>
   </transition>
 </v-container>
 </template>
@@ -57,6 +84,9 @@
 export default {
   data() {
     return {
+      statusIzbrisanog:false,
+      idKomitentaZaBrisanje:0,
+      komitentZaBrisanje:'',
       komitenti: [],
       valid: true,
       kreirajNovog: false,
@@ -92,8 +122,73 @@ export default {
 
 
     });
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getCity")
+      .then(response => {
+        this.gradovi = response.data.gradovi;
+        console.log(this.gradovi);
+
+
+
+      });
   },
   methods: {
+izmeniKomitenta(komId){
+  axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
+    params: {
+      sid: localStorage.getItem('sessionid'),
+      komId
+    }
+  }).then(response => {
+  console.log(response.data.komitent[0].kom_naziv);
+  this.komImeFirme=response.data.komitent[0].kom_naziv ,
+  this.komPunNaziv=response.data.komitent[0].kom_punNaziv,
+  this.komPib=response.data.komitent[0].kom_pib ,
+  this.komRacun=response.data.komitent[0].kom_ziroRacun ,
+  this.komGrad=response.data.komitent[0].kom_grad ,
+  this.komOpstina=response.data.komitent[0].kom_opstina ,
+  this.komAdresa=response.data.komitent[0].kom_adresa ,
+  this.komEmail=response.data.komitent[0].kom_mejl ,
+  this.komTelefon=response.data.komitent[0].kom_telefon
+this.kreirajNovog=true;
+
+  });
+
+},
+
+uspesnoBrisanje(){
+
+  this.idKomitentaZaBrisanje=0;
+  this.statusIzbrisanog= false;
+
+  axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
+    params: {
+      sid: localStorage.getItem('sessionid')
+    }
+  }).then(response => {
+    this.komitenti = response.data.komitenti;
+    console.log(this.komitenti);
+
+
+  });
+},
+
+    brisanjeKomitentaPotvrdjeno(){
+      axios.patch("http://837s121.mars-e1.mars-hosting.com/deleteComittent", {
+        // params: {
+          sid: localStorage.getItem('sessionid'),
+          komId:this.idKomitentaZaBrisanje
+        // }
+      }).then(response => {
+        this.statusIzbrisanog=response.data.status;
+        this.idKomitentaZaBrisanje=0;
+      });
+    },
+    brisanjeKomitenta(id,naziv){
+        this.komitentZaBrisanje=naziv;
+        this.idKomitentaZaBrisanje=id;
+
+
+    },
     sacuvajNovogKomitenta() {
       axios.post("http://837s121.mars-e1.mars-hosting.com/addNewComittent", {
 
@@ -117,14 +212,22 @@ export default {
     },
     kreiranjeNovog() {
       this.kreirajNovog = !this.kreirajNovog;
-      axios.get("http://837s121.mars-e1.mars-hosting.com/getCity")
-        .then(response => {
-          this.gradovi = response.data.gradovi;
-          console.log(this.gradovi);
+      this.komImeFirme= '',
+      this.komPunNaziv= '',
+      this.komPib= '',
+      this.komRacun= '',
+      this.komGrad= '',
+      this.komOpstina= '',
+      this.komAdresa= '',
+      this.komEmail= '',
+      this.komTelefon= ''
 
 
 
-        });
+
+
+
+
     },
     spisakOpstina(gradId) {
       axios.get("http://837s121.mars-e1.mars-hosting.com/getMunicipality", {
@@ -143,6 +246,19 @@ export default {
 </script>
 
 <style>
+.modal{
+  position:absolute;
+  width:50%;
+  z-index: 100;
+  opacity:1;
+  top:30%;
+  border-radius: 10px;
+  background-color:white;
+  -webkit-box-shadow: 0px 2px 241px -3px rgba(0,0,0,1);
+  -moz-box-shadow: 0px 2px 241px -3px rgba(0,0,0,1);
+  box-shadow: 0px 2px 241px -3px rgba(0,0,0,1);
+  position:fixed;
+}
 .animacijaForme-enter {
   opacity: 0;
 }
