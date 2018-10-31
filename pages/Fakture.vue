@@ -29,7 +29,7 @@
         <v-layout row wrap>
           <v-flex sm4>
 
-            <v-dialog ref="datumIzdavanja" :return-value.sync="datumIzdavanja" persistent lazy full-width width="290px">
+            <v-dialog ref="datumIzdavanja" v-model="modal" :return-value.sync="datumIzdavanja" persistent lazy full-width width="290px">
               <v-text-field slot="activator" v-model="datumIzdavanja" label="Datum izdavanja fakture " prepend-icon="event" readonly></v-text-field>
               <v-date-picker v-model="datumIzdavanja" scrollable>
                 <v-spacer></v-spacer>
@@ -42,11 +42,12 @@
           <v-flex sm4>
 
 
-            <v-dialog ref="datumPrometa" :return-value.sync="datumPrometa" persistent lazy full-width width="290px">
+
+            <v-dialog ref="datumPrometa" v-model="modal" :return-value.sync="datumPrometa" persistent lazy full-width width="290px">
               <v-text-field slot="activator" v-model="datumPrometa" label="Datum prometa" prepend-icon="event" readonly></v-text-field>
               <v-date-picker v-model="datumPrometa" scrollable>
                 <v-spacer></v-spacer>
-                <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
+                <v-btn flat color="primary" @click="modal=false">Cancel</v-btn>
                 <v-btn flat color="primary" @click="$refs.datumPrometa.save(datumPrometa)">OK</v-btn>
               </v-date-picker>
             </v-dialog>
@@ -54,7 +55,7 @@
           <v-flex sm4>
 
 
-            <v-dialog ref="datumValute" :return-value.sync="datumValute" persistent lazy full-width width="290px">
+            <v-dialog ref="datumValute" v-model="modal" :return-value.sync="datumValute" persistent lazy full-width width="290px">
               <v-text-field slot="activator" v-model="datumValute" label="Datum valute " prepend-icon="event" readonly></v-text-field>
               <v-date-picker v-model="datumValute" scrollable>
                 <v-spacer></v-spacer>
