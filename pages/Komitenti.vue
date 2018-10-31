@@ -10,7 +10,7 @@
   </div>
   <div v-if="statusIzbrisanog" class="text-xs-center  modal pa-5">
 <h1>
-    Uspesno ste izbrisali komitenta {{komitentZaBrisanje}}
+    Uspesno ste izbrisali komitenta "{{komitentZaBrisanje}}"
 </h1>
   <v-btn @click="uspesnoBrisanje" color="primary">Ok</v-btn>
   </div>
@@ -84,6 +84,7 @@
 export default {
   data() {
     return {
+      komitentIdIzmena:0,
       statusIzbrisanog:false,
       idKomitentaZaBrisanje:0,
       komitentZaBrisanje:'',
@@ -133,6 +134,7 @@ export default {
   },
   methods: {
 izmeniKomitenta(komId){
+  this.komitentIdIzmena=komId;
   axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
     params: {
       sid: localStorage.getItem('sessionid'),
@@ -208,6 +210,16 @@ uspesnoBrisanje(){
 
 
 
+        });
+
+        axios.patch("http://837s121.mars-e1.mars-hosting.com/deleteComittent", {
+          // params: {
+            sid: localStorage.getItem('sessionid'),
+            komId:this.komitentIdIzmena
+          // }
+        }).then(response => {
+          this.komitentIdIzmena=0;
+          this.idKomitentaZaBrisanje=0;
         });
     },
     kreiranjeNovog() {
