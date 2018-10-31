@@ -27,7 +27,7 @@
         <v-select @input="fakturaSelekt($event)" light class="pa-3" :items="komitenti" v-model="value" label=" Komitent"></v-select>
 
         <v-layout row wrap>
-          <v-flex xs4>
+          <v-flex sm4>
 
             <v-dialog ref="datumIzdavanja" :return-value.sync="datumIzdavanja" persistent lazy full-width width="290px">
               <v-text-field slot="activator" v-model="datumIzdavanja" label="Datum izdavanja fakture " prepend-icon="event" readonly></v-text-field>
@@ -39,7 +39,7 @@
             </v-dialog>
           </v-flex>
 
-          <v-flex xs4>
+          <v-flex sm4>
 
 
             <v-dialog ref="datumPrometa" :return-value.sync="datumPrometa" persistent lazy full-width width="290px">
@@ -51,7 +51,7 @@
               </v-date-picker>
             </v-dialog>
           </v-flex>
-          <v-flex xs4>
+          <v-flex sm4>
 
 
             <v-dialog ref="datumValute" :return-value.sync="datumValute" persistent lazy full-width width="290px">
@@ -104,16 +104,28 @@
               :items="proizvodi"
               hide-actions
               class="elevation-1"
+              no-data-text="Trenutno nema stavki."
             >
               <tr slot="items" slot-scope="props">
                 <td>{{ props.index+1 }}</td>
                 <td class="text-xs-center">{{ props.item.nazivUsluge }}</td>
-                <td class="text-xs-center">{{ props.item.kolicina }}</td>
                 <td class="text-xs-center">{{ props.item.jedinicaMere }}</td>
+                <td class="text-xs-center">{{ props.item.kolicina }}</td>
                 <td class="text-xs-center">{{ props.item.jedinicnaCena }}</td>
                 <td class="text-xs-center">{{ props.item.ukupnaCena }}</td>
+                <td class="text-xs-center">
+                  <v-icon
+                    small
+                    @click="ukloniStavku(props.item)"
+                  >
+                  delete
+                  </v-icon>
+                </td>
               </tr>
             </v-data-table>
+            <v-card>
+              <v-card-text class="headline text-xs-right" v-if="ukupno!=0"><em>Ukupno:</em> {{ukupno}} (RSD)</v-card-text>
+            </v-card>
           </v-flex>
     </v-layout>
 
@@ -175,13 +187,15 @@ export default {
             sortable: false,
             width: '10px'
           },
-          { text: 'Naziv proizvoda', sortable: false},
-          { text: 'Jedinica mere', value: 'jedinicaMere' },
+          { text: 'Naziv proizvoda', value:"nazivProizvoda"},
+          { text: 'Jedinica mere', value:"jedinicaMere"},
           { text: 'Kolicina', value: 'kolicina' },
-          { text: 'Jedinicna cena', value: 'jedinicnaCena' },
-          { text: 'Ukupna cena', value: 'ukupnaCena' }
+          { text: 'Jedinicna cena (RSD)', value: 'jedinicnaCena' },
+          { text: 'Ukupna cena (RSD)', value: 'ukupnaCena' },
+          { text: 'Ukloni stavku', value: 'ukloniStavku'}
         ],
-      proizvodi: []
+      proizvodi: [],
+      ukupno: 0
     }
   },
   methods:{
@@ -206,8 +220,15 @@ export default {
           ukupnaCena: this.proizvodKolicina * this.proizvodJedinicnaCena
         }
         this.proizvodi.push(noviProizvod);
+        // DODAJEM NA UKUPNU CENU FAKTURE
+        this.ukupno+=this.proizvodKolicina * this.proizvodJedinicnaCena
       }
-    }
+    },
+    ukloniStavku(stavka) {
+        const zaBrisanje = this.proizvodi.indexOf(stavka)
+        confirm('Da li ste sigurni?') && this.proizvodi.splice(zaBrisanje, 1)
+        this.ukupno-=stavka.ukupnaCena;
+    },
   }
 
 }
