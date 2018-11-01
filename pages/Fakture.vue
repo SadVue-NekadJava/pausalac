@@ -1,8 +1,9 @@
 <template>
 <v-container id="wrapper">
+  <v-form ref="form" v-model="valid">
   <v-layout row wrap>
     <v-flex xs9>
-      <v-expansion-panel popout class="  mt-3">
+      <v-expansion-panel popout class="mt-3">
         <v-expansion-panel-content v-if="  novafaktura" v-for="faktura in fakture" :key="faktura.id">
           <div slot="header">{{faktura.name}} {{faktura.date}}
             <p>{{faktura.total}}</p>
@@ -23,28 +24,20 @@
   <v-layout row wrap>
     <v-flex xs12 class="fadeIn text-xs-center" v-if="!novafaktura">
       <v-form class="forma pa-3">
-        <h2>Br. Fakture: 107/18</h2>
-        <v-select @input="fakturaSelekt($event)" light class="pa-3" :items="komitenti" item-text="kom_naziv" item-value="kom_id" v-model="value" label=" Komitent"></v-select>
-
+        <h2>Br. Fakture: {{brojFakture}}</h2>
         <v-layout row wrap>
-          <v-flex sm4>
-
-            <v-dialog ref="datumIzdavanja" v-model="modal" :return-value.sync="datumIzdavanja" persistent lazy full-width width="290px">
-              <v-text-field slot="activator" v-model="datumIzdavanja" label="Datum izdavanja fakture " prepend-icon="event" readonly></v-text-field>
-              <v-date-picker v-model="datumIzdavanja" scrollable>
-                <v-spacer></v-spacer>
-                <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
-                <v-btn flat color="primary" @click="$refs.datumIzdavanja.save(datumIzdavanja)">OK</v-btn>
-              </v-date-picker>
-            </v-dialog>
+          <v-flex xs12>
+            <v-select :rules="obaveznoPoljeRules" @input="fakturaSelekt($event)" light class="pa-3" :items="komitenti" item-text="kom_naziv" item-value="kom_id" v-model="komitentId" label=" Komitent"></v-select>
           </v-flex>
+        </v-layout>
+        <v-layout row wrap>
 
           <v-flex sm4>
 
 
 
             <v-dialog ref="datumPrometa" v-model="modal" :return-value.sync="datumPrometa" persistent lazy full-width width="290px">
-              <v-text-field slot="activator" v-model="datumPrometa" label="Datum prometa" prepend-icon="event" readonly></v-text-field>
+              <v-text-field :rules="obaveznoPoljeRules" slot="activator" v-model="datumPrometa" label="Datum prometa" prepend-icon="event" readonly></v-text-field>
               <v-date-picker v-model="datumPrometa" scrollable>
                 <v-spacer></v-spacer>
                 <v-btn flat color="primary" @click="modal=false">Cancel</v-btn>
@@ -55,44 +48,33 @@
           <v-flex sm4>
 
 
-            <v-dialog ref="datumValute" v-model="modal" :return-value.sync="datumValute" persistent lazy full-width width="290px">
-              <v-text-field slot="activator" v-model="datumValute" label="Datum valute " prepend-icon="event" readonly></v-text-field>
-              <v-date-picker v-model="datumValute" scrollable>
+            <v-dialog ref="datumValute" v-model="modal1" :return-value.sync="datumValute" persistent lazy full-width width="290px">
+              <v-text-field :rules="obaveznoPoljeRules" slot="activator" v-model="datumValute" label="Datum valute" prepend-icon="event" readonly></v-text-field>
+              <v-date-picker v-model="datumValute" :min="datumPrometa" scrollable>
                 <v-spacer></v-spacer>
-                <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
+                <v-btn flat color="primary" @click="modal1 = false">Cancel</v-btn>
                 <v-btn flat color="primary" @click="$refs.datumValute.save(datumValute)">OK</v-btn>
               </v-date-picker>
             </v-dialog>
           </v-flex>
+          <v-flex sm4>
+            <v-select light class="pa-3" :rules="obaveznoPoljeRules" :items="mesta" item-text="gra_naziv" item-value="gra_id" v-model="mesto" label="Mesto"></v-select>
+          </v-flex>
         </v-layout>
-  <v-layout row wrap>
-    <v-flex xs3>
-      <v-select light class="pa-3" :items="mesta" v-model="value" label=" Mesto"></v-select>
-
-    </v-flex>
-    <v-flex xs1>
-
-    </v-flex>
-      <v-flex xs5>
-          <v-text-field label="Adresa"></v-text-field>
+    <v-layout row wrap justify-center>
 
 
-      </v-flex>
-    </v-layout>
-    <v-layout row wrap justify-space-around>
-
-
-          <v-flex lg2>
+          <v-flex md2 mr-5>
             <v-text-field v-model="proizvodNazivUsluge" label="Naziv usluge/proizvoda"></v-text-field>
           </v-flex>
-          <v-flex lg2>
-            <v-text-field v-model="proizvodKolicina" label="Kolicina"></v-text-field>
+          <v-flex md2 mr-5>
+            <v-text-field v-model="proizvodKolicina" type="number" label="Kolicina"></v-text-field>
           </v-flex>
-          <v-flex lg2>
+          <v-flex md2 mr-5>
             <v-text-field v-model="proizvodJedinicaMere" label="Jedinica mere"></v-text-field>
           </v-flex>
-          <v-flex lg2>
-            <v-text-field v-model="proizvodJedinicnaCena" label="Jedinicna cena"></v-text-field>
+          <v-flex md2 mr-5>
+            <v-text-field v-model="proizvodJedinicnaCena" type="number" label="Jedinicna cena"></v-text-field>
           </v-flex>
       </v-layout>
       <v-layout row wrap justify-center>
@@ -109,10 +91,10 @@
             >
               <tr slot="items" slot-scope="props">
                 <td>{{ props.index+1 }}</td>
-                <td class="text-xs-center">{{ props.item.nazivUsluge }}</td>
-                <td class="text-xs-center">{{ props.item.jedinicaMere }}</td>
+                <td class="text-xs-center">{{ props.item.naziv }}</td>
+                <td class="text-xs-center">{{ props.item.cena }}</td>
+                <td class="text-xs-center">{{ props.item.mera }}</td>
                 <td class="text-xs-center">{{ props.item.kolicina }}</td>
-                <td class="text-xs-center">{{ props.item.jedinicnaCena }}</td>
                 <td class="text-xs-center">{{ props.item.ukupnaCena }}</td>
                 <td class="text-xs-center">
                   <v-icon
@@ -130,12 +112,15 @@
           </v-flex>
     </v-layout>
 
-        <v-text-field label="Opis"></v-text-field>
-
-
+        <v-text-field label="Opis" v-model="opisFakture"></v-text-field>
+      <v-layout row wrap class="justify-center">
+          <v-btn color="success" :disabled="!valid" @click="posaljiFakturu(1)">Sacuvaj fakturu</v-btn>
+          <v-btn color="primary" :disabled="!valid" @click="posaljiFakturu(2)">Sacuvaj radnu verziju</v-btn>
+      </v-layout>
       </v-form>
     </v-flex>
   </v-layout>
+  </v-form>
 </v-container>
 </template>
 
@@ -148,16 +133,18 @@ export default {
   },
   data() {
     return {
+      brojFakture: '',
       date: null,
-      datumIzdavanja: null,
       datumPrometa: null,
       datumValute: null,
+      mesto: '',
       menu: false,
       modal: false,
+      modal1: false,
       menu2: false,
       value: '',
       novafaktura: true,
-      mesta:['Beograd','Leskovac','Smederevo','Dodaj novi'],
+      mesta:[],
       fakture: [{
           id: '1',
           name: 'Enon Solutions',
@@ -187,39 +174,31 @@ export default {
             sortable: false,
             width: '10px'
           },
-          { text: 'Naziv proizvoda', value:"nazivProizvoda"},
-          { text: 'Jedinica mere', value:"jedinicaMere"},
-          { text: 'Kolicina', value: 'kolicina' },
+          { text: 'Naziv proizvoda', value:"nazivProizvoda", sortable: false},
           { text: 'Jedinicna cena (RSD)', value: 'jedinicnaCena' },
+          { text: 'Jedinica mere', value:"jedinicaMere", sortable: false},
+          { text: 'Kolicina', value: 'kolicina'},
           { text: 'Ukupna cena (RSD)', value: 'ukupnaCena' },
-          { text: 'Ukloni stavku', value: 'ukloniStavku'}
+          { text: 'Ukloni stavku', value: 'ukloniStavku', sortable: false}
         ],
       proizvodi: [],
       ukupno: 0,
-      komitenti:[]
+      komitenti:[],
+      // ID ODABRANOG KOMITENTA
+      komitentId: '',
+      // REQUIRED POLJA
+      obaveznoPoljeRules:[
+         v => !!v || 'Obavezno polje.'
+      ],
+      // KONTROLA ZA DUGMAD
+      valid: false,
+      opisFakture: ''
     }
 
   },
-  mounted() {
-    axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
-      params: {
-        sid: localStorage.getItem('sessionid')
-      }
-    }).then(response => {
-      this.komitenti = response.data.komitenti;
-      console.log(this.komitenti);
-
-
-    });
-  },
   methods:{
     fakturaSelekt(faktura){
-      if(faktura==='Unesi novog Komitenta'){
-        alert(1);
-      }
-      else{
-        alert(2);
-      }
+
     },
     dodajProizvod(){
       if(this.proizvodNazivUsluge==='' || this.proizvodJedinicaMere==='' || this.proizvodKolicina==='' || this.proizvodJedinicnaCena===''){
@@ -227,10 +206,10 @@ export default {
       }
       else{
         var noviProizvod={
-          nazivUsluge: this.proizvodNazivUsluge,
-          jedinicaMere: this.proizvodJedinicaMere,
+          naziv: this.proizvodNazivUsluge,
+          mera: this.proizvodJedinicaMere,
           kolicina: this.proizvodKolicina,
-          jedinicnaCena: this.proizvodJedinicnaCena,
+          cena: this.proizvodJedinicnaCena,
           ukupnaCena: this.proizvodKolicina * this.proizvodJedinicnaCena
         }
         this.proizvodi.push(noviProizvod);
@@ -243,7 +222,108 @@ export default {
         confirm('Da li ste sigurni?') && this.proizvodi.splice(zaBrisanje, 1)
         this.ukupno-=stavka.ukupnaCena;
     },
-  }
+    posaljiFakturu(statusFakture){
+      // FAKTURA JE ZAVRSENA
+      if(statusFakture===1){
+        // KONTROLA DA LI JE ODABRAN KOMITENT
+        if(this.komitentId===''){
+          alert('Niste odabrali komitenta.');
+        }
+        // KONTROLA DA LI JE ODABRAN DATUM PROMETA
+        else if(this.datumPrometa===null){
+          alert('Niste uneli datum prometa.');
+        }
+        // KONTROLA DA LI JE ODABRAN DATUM VALUTE
+        else if(this.datumValute===null){
+          alert('Niste uneli datum valute.');
+        }
+        // KONTROLA DA LI JE ODABRANO MESTO
+        else if(this.mesto===''){
+          alert('Niste odabrali mesto pisanja fakture.')
+        }
+        // KONTROLA DA LI POSTOJI BAR JEDAN PROIZVOD ILI USLUGA
+        else if(this.proizvodi.length===0){
+          alert('Morate uneti barem jedan proizvod ili uslugu.');
+        }
+        else{
+          // PROVERA DA LI DATUM PROMETA IDE PRE DATUMA VALUTE
+          if(new Date(this.datumPrometa)>=new Date(this.datumValute)){
+            alert('Datum valute ne moze biti pre datuma prometa.')
+          }
+          // SVE KONTROLE SU USPESNE
+          else{
+            axios.post("http://837s121.mars-e1.mars-hosting.com/postInvoice", {
+                  sid: localStorage.getItem('sessionid'),
+                  valuta: this.datumValute,
+                  datumPrometa: this.datumPrometa,
+                  mestoPrometa: this.mesto,
+                  total: this.ukupno,
+                  statusFakture: statusFakture,
+                  uputstva: this.opisFakture,
+                  komId: this.komitentId,
+                  stavkeFakture: this.proizvodi
+              })
+              .then(response => {
+              if(response.data.status){
+                alert('Uspesno ste uneli fakturu. Broj fatkure: '+response.data.brojFakture);
+              }
+              else{
+                alert('Doslo je do greske, faktura nije uneta.');
+              }
+              });
+          }
+        }
+      }
+      // FAKTURA SE CUVA KAO NACRT
+      else{
+        // PROVERA DA LI SU DATUMI UNESENI
+        if(this.datumPrometa!==null && this.datumValute!==null){
+          // PROVERA DA LI DATUM PROMETA IDE PRE DATUMA VALUTE
+          if(new Date(this.datumPrometa)>=new Date(this.datumValute)){
+            alert('Datum valute ne moze biti pre datuma prometa.');
+            // ZUSTAVLJAM FUNKCIJU
+            return false;
+          }
+        }
+        // axios.post("http://837s121.mars-e1.mars-hosting.com/postInvoice", {
+        //       sid: localStorage.getItem('sessionid'),
+        //
+        //   })
+        //   .then(response => {
+        //   console.log(response.data);
+        //   });
+      }
+    }
+  },
+  mounted() {
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
+      params: {
+        sid: localStorage.getItem('sessionid')
+      }
+    }).then(response => {
+      this.komitenti = response.data.komitenti;
+    });
+    // POPUNJAVANJE SELEKTA GRADOVI
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getCity")
+      .then(response => {
+        this.mesta = response.data.gradovi;
+      });
+    // BROJ FAKTURE
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getInvoiceNumber", {
+      params: {
+        sid: localStorage.getItem('sessionid')
+      }
+    }).then(response => {
+      this.brojFakture=response.data.broj
+    });
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getInvoices", {
+      params: {
+        sid: localStorage.getItem('sessionid')
+      }
+    }).then(response => {
+      console.log(response.data);
+    });
+  },
 
 }
 </script>
