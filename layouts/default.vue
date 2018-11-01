@@ -51,7 +51,9 @@
     </v-content>
 
     <v-footer class="opacity" :fixed="fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <span>&copy; {{ new Date().getFullYear() }}</span><v-flex xs4 offset-xs4>
+
+    <span >Copyright@ FLM Systems</span>  </v-flex>
     </v-footer>
       </div>
   </v-app>

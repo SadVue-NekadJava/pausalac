@@ -141,19 +141,30 @@ izmeniKomitenta(komId){
       komId
     }
   }).then(response => {
-  console.log(response.data.komitent[0].kom_naziv);
+  console.log(response.data.komitent);
   this.komImeFirme=response.data.komitent[0].kom_naziv ,
   this.komPunNaziv=response.data.komitent[0].kom_punNaziv,
   this.komPib=response.data.komitent[0].kom_pib ,
   this.komRacun=response.data.komitent[0].kom_ziroRacun ,
-  this.komGrad=response.data.komitent[0].kom_grad ,
-  this.komOpstina=response.data.komitent[0].kom_opstina ,
+  this.komGrad=response.data.komitent[0].gra_id ,
+  this.komOpstina=response.data.komitent[0].ops_id ,
   this.komAdresa=response.data.komitent[0].kom_adresa ,
   this.komEmail=response.data.komitent[0].kom_mejl ,
   this.komTelefon=response.data.komitent[0].kom_telefon
-this.kreirajNovog=true;
 
+
+});
+setTimeout(()=>{
+  axios.get("http://837s121.mars-e1.mars-hosting.com/getMunicipality", {
+    params: {
+      gradId:this.komGrad
+    }
+  }).then(response => {
+    this.komOpstine = response.data.opstine;
+    console.log(response.data);
   });
+  this.kreirajNovog=true;
+},100)
 
 },
 
@@ -212,6 +223,7 @@ uspesnoBrisanje(){
 
         });
 
+
         axios.patch("http://837s121.mars-e1.mars-hosting.com/deleteComittent", {
           // params: {
             sid: localStorage.getItem('sessionid'),
@@ -221,6 +233,7 @@ uspesnoBrisanje(){
           this.komitentIdIzmena=0;
           this.idKomitentaZaBrisanje=0;
         });
+        location.reload();
     },
     kreiranjeNovog() {
       this.kreirajNovog = !this.kreirajNovog;
