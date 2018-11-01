@@ -17,10 +17,19 @@
   </v-flex>
   <transition name="animacijaForme">
     <v-flex xs12 sm6 offset-sm3 class="forma text-xs-center" v-if="kreirajNovog">
+<v-layout row wrap>
 
 
 
-      <v-form v-if="kreirajNovog" ref="form" v-model="valid" class="forma mt-3 pa-5">
+<v-flex xs10>
+
+</v-flex>
+
+<v-flex xs2>
+  <v-icon @click="kreirajNovog=false" class="iks pt-3">clear</v-icon>
+</v-flex>
+</v-layout>
+      <v-form v-if="kreirajNovog" ref="form" v-model="valid" class=" pt-2 pb-5 pr-5 pl-5">
         <v-text-field v-model="komImeFirme" :rules="obaveznoPoljeRules" label="Ime Firme"></v-text-field>
         <v-text-field v-model="komPunNaziv" :rules="obaveznoPoljeRules" label="Pun naziv sa resenja"></v-text-field>
         <v-text-field v-model="komPib" mask="#########" :counter="9" :rules="pibRules" label="Pib"></v-text-field>
@@ -271,6 +280,13 @@ uspesnoBrisanje(){
 </script>
 
 <style>
+.iks{
+  cursor:pointer;
+
+}
+.iks:hover{
+  transform:scale(1.4);
+}
 .modal{
   position:absolute;
   width:50%;

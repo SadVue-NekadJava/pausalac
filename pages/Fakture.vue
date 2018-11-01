@@ -2,14 +2,50 @@
 <v-container id="wrapper">
   <v-form ref="form" v-model="valid">
   <v-layout row wrap>
-    <v-flex xs9>
+    <v-flex xs12 sm8 offset-sm2>
       <v-expansion-panel popout class="mt-3">
-        <v-expansion-panel-content v-if="  novafaktura" v-for="faktura in fakture" :key="faktura.id">
-          <div slot="header">{{faktura.name}} {{faktura.date}}
-            <p>{{faktura.total}}</p>
+        <v-expansion-panel-content class="pa-2" v-if="  novafaktura" v-for="faktura in fakture" :key="faktura.id">
+          <div slot="header">
+<v-layout row wrap>
+  <v-flex xs5>
+
+
+              <h2>{{faktura.name}}</h2> <h3>{{faktura.date}}</h3>
+            </v-flex>
+            <v-flex xs4>
+
+            </v-flex>
+            <v-flex xs3>
+              <h2>{{faktura.total}} RSD</h2>
+            </v-flex>
+          </v-layout>
           </div>
           <v-card>
-            <v-card-text>{{faktura.total}}</v-card-text>
+            <v-card-text>
+           <h1 class="text-xs-center pb-3">Broj fakture: 4/2018</h1>
+<v-flex  class="text-xs-center">
+          <h2 class="pa-4"></h2>
+                    <h2 class="pa-4"></h2>
+                              <h2 class="pa-4"></h2>
+                                        <h2 class="pa-4"></h2>
+                                                  <h2 class="pa-4"></h2>
+
+<v-layout row wrap>
+  <v-flex xs6>
+    <h2 class="pa-2">Datum prometa: 20.10.2018</h2>
+
+  </v-flex>
+  <v-flex xs6>
+          <h2 class="pa-2">Datum valute: 30.10.2018</h2>
+  </v-flex>
+</v-layout>
+
+            <h2 class="pt-5 text-xs-right">Ukupna cena:{{faktura.total}} RDS</h2>
+
+                  </v-flex>
+            <h2 class="pa-3">Mesto: Beograd</h2>
+
+            </v-card-text>
           </v-card>
         </v-expansion-panel-content>
       </v-expansion-panel>

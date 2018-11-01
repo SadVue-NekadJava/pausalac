@@ -37,7 +37,7 @@
       <v-toolbar-side-icon
        class="hidden-md-and-up" @click="drawer = !drawer">
      </v-toolbar-side-icon>
-      <v-toolbar-title><router-link to="/" tag="span" style="cursor:pointer;">Pausalac</router-link></v-toolbar-title>
+      <v-toolbar-title><router-link to="/home" tag="span" style="cursor:pointer;">Pausalac</router-link></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn flat v-for="(item,i) in items" :key="i" :to="item.to"><v-icon left>{{item.icon}}</v-icon>{{item.title}}</v-btn>
