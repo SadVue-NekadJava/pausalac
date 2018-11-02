@@ -60,7 +60,6 @@
   <v-layout row wrap>
     <v-flex xs12 class="fadeIn text-xs-center" v-if="!novafaktura">
       <v-form class="forma pa-3">
-        <h2>Br. Fakture: {{brojFakture}}</h2>
         <v-layout row wrap>
           <v-flex xs12>
             <v-select :rules="obaveznoPoljeRules" @input="fakturaSelekt($event)" light class="pa-3" :items="komitenti" item-text="kom_naziv" item-value="kom_id" v-model="komitentId" label=" Komitent"></v-select>
@@ -169,7 +168,6 @@ export default {
   },
   data() {
     return {
-      brojFakture: '',
       date: null,
       datumPrometa: null,
       datumValute: null,
@@ -312,22 +310,42 @@ export default {
       }
       // FAKTURA SE CUVA KAO NACRT
       else{
+
         // PROVERA DA LI SU DATUMI UNESENI
         if(this.datumPrometa!==null && this.datumValute!==null){
           // PROVERA DA LI DATUM PROMETA IDE PRE DATUMA VALUTE
-          if(new Date(this.datumPrometa)>=new Date(this.datumValute)){
-            alert('Datum valute ne moze biti pre datuma prometa.');
+          if(new Date(this.datumPrometa)>new Date(this.datumValute)){
+            alert('Datum valute ne moze biti pre datuma prometa!');
             // ZUSTAVLJAM FUNKCIJU
             return false;
           }
         }
-        // axios.post("http://837s121.mars-e1.mars-hosting.com/postInvoice", {
-        //       sid: localStorage.getItem('sessionid'),
-        //
-        //   })
-        //   .then(response => {
-        //   console.log(response.data);
-        //   });
+        if(this.komitentId==='' && this.mesto===''){
+          alert('Morate odabrati komitenta i mesto prometa!');
+        }
+        else if(this.komitentId===''){
+          alert('Morate odabrati komitenta!');
+        }
+        else if(this.mesto===''){
+          alert('Morate odabrati mesto prometa!');
+        }
+        else{
+          // CUVAM FAKTURU KAO NACRT
+          axios.post("http://837s121.mars-e1.mars-hosting.com/postTemplate", {
+              sid: localStorage.getItem('sessionid'),
+              valuta: this.datumValute,
+              datumPrometa: this.datumPrometa,
+              mestoPrometa: this.mesto,
+              total: this.ukupno,
+              statusFakture: statusFakture,
+              uputstva: this.opisFakture,
+              komId: this.komitentId,
+              stavkeFakture: this.proizvodi
+            })
+            .then(response => {
+              console.log(response.data);
+            });
+        }
       }
     }
   },
@@ -344,14 +362,6 @@ export default {
       .then(response => {
         this.mesta = response.data.gradovi;
       });
-    // BROJ FAKTURE
-    axios.get("http://837s121.mars-e1.mars-hosting.com/getInvoiceNumber", {
-      params: {
-        sid: localStorage.getItem('sessionid')
-      }
-    }).then(response => {
-      this.brojFakture=response.data.broj
-    });
     axios.get("http://837s121.mars-e1.mars-hosting.com/getInvoices", {
       params: {
         sid: localStorage.getItem('sessionid')

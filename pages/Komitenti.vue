@@ -128,6 +128,12 @@ export default {
       }
     }).then(response => {
       this.komitenti = response.data.komitenti;
+      for(var i=0;i<this.komitenti.length;i++){
+        if(this.komitenti[i].kom_telefon!=null){
+          var string=this.komitenti[i].kom_telefon;
+          this.komitenti[i].kom_telefon='+('+string.slice(0,3)+')'+string.slice(3,5)+'-'+string.slice(5,8)+'-'+string.slice(9)
+        }
+      }
       console.log(this.komitenti);
 
 
