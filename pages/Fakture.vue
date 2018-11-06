@@ -16,7 +16,7 @@
 
             </v-flex>
             <v-flex xs3>
-              <h2>{{faktura.fak_total}} RSD</h2>
+              <h2>{{faktura.fak_total|thousandSeparator}} RSD</h2>
             </v-flex>
           </v-layout>
           </div>
@@ -32,13 +32,13 @@
             >
               <template slot="items" slot-scope="props">
                 <td class="text-xs-center">{{ props.item.usp_naziv }}</td>
-                <td class="text-xs-center">{{ props.item.usp_cena }}</td>
+                <td class="text-xs-center">{{ props.item.usp_cena|thousandSeparator }}</td>
                 <td class="text-xs-center">{{ props.item.usp_mera }}</td>
                 <td class="text-xs-center">{{ props.item.usp_kolicina }}</td>
-                <td class="text-xs-center">{{ props.item.usp_cena * props.item.usp_kolicina}}</td>
+                <td class="text-xs-center">{{ (props.item.usp_cena * props.item.usp_kolicina)|thousandSeparator}}</td>
               </template>
             </v-data-table>
-            <h2 class="pt-5 text-xs-center">Ukupna cena: {{faktura.fak_total}} RSD</h2>
+            <h2 class="pt-5 text-xs-center">Ukupna cena: {{faktura.fak_total|thousandSeparator}} RSD</h2>
             <v-layout row wrap>
               <v-flex xs7>
                 <h2 class="pt-5 text-xs-left">Mesto: {{faktura.fak_mestoPrometa}}, {{faktura.fak_datumPrometa}}</h2>
@@ -129,10 +129,10 @@
               <tr slot="items" slot-scope="props">
                 <td>{{ props.index+1 }}</td>
                 <td class="text-xs-center">{{ props.item.naziv }}</td>
-                <td class="text-xs-center">{{ props.item.cena }}</td>
+                <td class="text-xs-center">{{ props.item.cena|thousandSeparator }}</td>
                 <td class="text-xs-center">{{ props.item.mera }}</td>
                 <td class="text-xs-center">{{ props.item.kolicina }}</td>
-                <td class="text-xs-center">{{ props.item.ukupnaCena }}</td>
+                <td class="text-xs-center">{{ props.item.ukupnaCena|thousandSeparator }}</td>
                 <td class="text-xs-center">
                   <v-icon
                     small
@@ -144,7 +144,7 @@
               </tr>
             </v-data-table>
             <v-card>
-              <v-card-text class="headline text-xs-right" v-if="ukupno!=0"><em>Ukupno:</em> {{ukupno}} (RSD)</v-card-text>
+              <v-card-text class="headline text-xs-right" v-if="ukupno!=0"><em>Ukupno:</em> {{ukupno|thousandSeparator}} (RSD)</v-card-text>
             </v-card>
           </v-flex>
     </v-layout>

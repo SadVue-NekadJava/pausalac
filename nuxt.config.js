@@ -18,7 +18,7 @@ export default {
       { src:'https://unpkg.com/axios/dist/axios.min.js'}
     ]
   },
-  plugins: ['~/plugins/vuetify.js',  { src: '~plugins/vuelidate', ssr: false }],
+  plugins: ['~/plugins/vuetify.js', '~plugins/filters.js',  { src: '~plugins/vuelidate', ssr: false }],
   css: [
     '~/assets/style/app.styl'
   ],

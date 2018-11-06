@@ -76,7 +76,7 @@
               <h3 class="pt-3">Adresa:{{komitent.kom_adresa}} </h3>
               <h3 class="pt-2">Email: {{komitent.kom_mejl}}</h3>
               <h3 class="pt-2">Pib: {{komitent.kom_pib}} </h3>
-              <h3 class="pt-2">Telefon: {{komitent.kom_telefon}}</h3>
+              <h3 class="pt-2">Telefon: {{komitent.kom_telefon|phoneNumber}}</h3>
               <v-btn @click="izmeniKomitenta(komitent.kom_id)" color="warning">Izmeni</v-btn>
               <v-btn @click="brisanjeKomitenta(komitent.kom_id,komitent.kom_naziv)" color="error">Obrisi</v-btn>
             </v-card-text>
@@ -128,12 +128,12 @@ export default {
       }
     }).then(response => {
       this.komitenti = response.data.komitenti;
-      for(var i=0;i<this.komitenti.length;i++){
-        if(this.komitenti[i].kom_telefon!=null){
-          var string=this.komitenti[i].kom_telefon;
-          this.komitenti[i].kom_telefon='+('+string.slice(0,3)+')'+string.slice(3,5)+'-'+string.slice(5,8)+'-'+string.slice(9)
-        }
-      }
+      // for(var i=0;i<this.komitenti.length;i++){
+      //   if(this.komitenti[i].kom_telefon!=null){
+      //     var string=this.komitenti[i].kom_telefon;
+      //     this.komitenti[i].kom_telefon='+('+string.slice(0,3)+')'+string.slice(3,5)+'-'+string.slice(5,8)+'-'+string.slice(9)
+        // }
+      // }
       console.log(this.komitenti);
 
 

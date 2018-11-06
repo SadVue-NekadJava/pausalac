@@ -8,9 +8,9 @@
 <h1>Ukupan promet u poslednjih 12 meseci</h1>
 <div class="mt-5 mr-5 ml-5 bar" >
 <div class="barHealth d-flex align-center":class='{barHealthRed:procenatFakturisanogMesecno>80}' :style="{width:procenatFakturisanogMesecno +'%'}">
-<h3 v-if="procenatFakturisanogMesecno<50">{{numberWithThousands(cifraMesecno)}} RSD</h3>
-<h2 v-if="procenatFakturisanogMesecno>=50&&procenatFakturisanogMesecno<80">{{numberWithThousands(cifraMesecno)}} RSD</h2>
-<h1 v-if="procenatFakturisanogMesecno>=80">{{numberWithThousands(cifraMesecno)}} RSD</h1>
+<h3 v-if="procenatFakturisanogMesecno<50">{{cifraMesecno|thousandSeparator}} RSD</h3>
+<h2 v-if="procenatFakturisanogMesecno>=50&&procenatFakturisanogMesecno<80">{{cifraMesecno|thousandSeparator}} RSD</h2>
+<h1 v-if="procenatFakturisanogMesecno>=80">{{cifraMesecno|thousandSeparator}} RSD</h1>
 </div>
 </div>
 <p class="mt-1"><em>Promet od 8 miliona dinara</em></p>
@@ -20,9 +20,9 @@
 <h1>Ukupan promet u kalendarskog godini</h1>
 <div class="mt-5 mr-5 ml-5 bar" >
 <div class="barHealth d-flex align-center":class='{barHealthRed:procenatFakturisanogGodisnje>80}' :style="{width:procenatFakturisanogGodisnje +'%'}">
-<h3 v-if="procenatFakturisanogGodisnje<50">{{numberWithThousands(cifraGodisnje)}} RSD</h3>
-<h2 v-if="procenatFakturisanogGodisnje>=50&&procenatFakturisanogGodisnje<80">{{numberWithThousands(cifraGodisnje)}} RSD</h2>
-<h1 v-if="procenatFakturisanogGodisnje>=80">{{numberWithThousands(cifraGodisnje)}} RSD</h1>
+<h3 v-if="procenatFakturisanogGodisnje<50">{{cifraGodisnje|thousandSeparator  }} RSD</h3>
+<h2 v-if="procenatFakturisanogGodisnje>=50&&procenatFakturisanogGodisnje<80">{{cifraGodisnje|thousandSeparator}} RSD</h2>
+<h1 v-if="procenatFakturisanogGodisnje>=80">{{cifraGodisnje|thousandSeparator}} RSD</h1>
 </div>
 </div>
 <p class="mt-1"><em>Promet od 6 miliona dinara</em></p>
@@ -42,9 +42,7 @@ data(){
   }
 },
 methods:{
-   numberWithThousands(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
+
 },
   mounted(){
     this.logged=this.$store.state.logged;
