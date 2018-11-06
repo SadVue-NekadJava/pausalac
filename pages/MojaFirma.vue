@@ -16,11 +16,15 @@
 <v-btn v-if="izmenaPodataka"  @click="dugmeIzmena "    color="warning ">Izmeni</v-btn>
 <v-btn v-if="!izmenaPodataka" @click="odustani"    color="secondary">Odustani</v-btn>
 
-<v-btn  v-if="!izmenaPodataka" color="primary">Sacuvaj</v-btn>
+<v-btn :disabled="!valid" @click="sacuvajIzmeneFirme" v-if="!izmenaPodataka" color="primary">Sacuvaj</v-btn>
 
 </div>
 </div >
 <hr>
+<v-form refs="form" v-model="valid">
+
+
+
 <v-layout row wrap>
   <v-flex>
     <v-layout class="pt-4" row wrap>
@@ -36,6 +40,8 @@
 
 
 v-model="punNaziv"
+  :rules="obaveznoPoljeRules"
+
 ></v-text-field>
 </v-flex>
     </v-layout>
@@ -44,15 +50,16 @@ v-model="punNaziv"
 <v-flex  xs7>
 <h3 >Maticni broj:</h3>
 </v-flex>
-<v-flex hidden-sm-and-up xs5>
+<v-flex class="pa-4" hidden-sm-and-up xs5>
 </v-flex>
 <v-flex xs5>
   <h3 v-if="izmenaPodataka" class="podaci">{{maticniBroj}}</h3>
   <v-text-field v-else
     class="podaciIzmena pa-0"
-
-
+:rules="maticniBrojRules"
   v-model="maticniBroj"
+    mask="########"
+
   ></v-text-field>
 </v-flex>
     </v-layout>
@@ -60,13 +67,15 @@ v-model="punNaziv"
 <v-flex  xs7>
 <h3 >Pib:</h3>
 </v-flex>
-<v-flex hidden-sm-and-up xs5>
+<v-flex class="pa-4" hidden-sm-and-up xs5>
 </v-flex>
 <v-flex xs5>
   <h3 v-if="izmenaPodataka" class="podaci">{{pib}}</h3>
   <v-text-field v-else
     class="podaciIzmena pa-0"
   v-model="pib"
+    :rules="pibRules"
+    mask="#########"
   ></v-text-field>
 </v-flex>
     </v-layout>
@@ -74,13 +83,15 @@ v-model="punNaziv"
 <v-flex  xs7>
 <h3 >Ziro racun:</h3>
 </v-flex>
-<v-flex hidden-sm-and-up xs5>
+<v-flex class="pa-4" hidden-sm-and-up xs5>
 </v-flex>
 <v-flex xs5>
   <h3 v-if="izmenaPodataka" class="podaci">{{ziroRacun|accNumber}}</h3>
   <v-text-field v-else
     class="podaciIzmena pa-0"
   v-model="ziroRacun"
+        mask="###-#############-##"
+  :rules="obaveznoPoljeRules"
   ></v-text-field>
 </v-flex>
     </v-layout>
@@ -88,12 +99,13 @@ v-model="punNaziv"
 <v-flex  xs7>
 <h3 >Sifra delatnosti:</h3>
 </v-flex>
-<v-flex hidden-sm-and-up xs5>
+<v-flex class="pa-4" hidden-sm-and-up xs5>
 </v-flex>
 <v-flex xs5>
   <h3 v-if="izmenaPodataka" class="podaci">{{sifraDelatnosti}}</h3>
   <v-text-field v-else
     class="podaciIzmena pa-0"
+      :rules="obaveznoPoljeRules"
   v-model="sifraDelatnosti"
   ></v-text-field>
 </v-flex>
@@ -102,11 +114,12 @@ v-model="punNaziv"
   <v-flex  xs7>
   <h3 >Opis delatnosti:</h3>
   </v-flex>
-  <v-flex hidden-sm-and-up xs5>
+  <v-flex class="pa-4" hidden-sm-and-up xs5>
   </v-flex>
   <v-flex xs5>
   <h3 v-if="izmenaPodataka" class="podaci">{{opisDelatnosti}}</h3>
   <v-text-field v-else
+  :rules="obaveznoPoljeRules"
     class="podaciIzmena pa-0"
   v-model="opisDelatnosti"
   ></v-text-field>
@@ -119,12 +132,13 @@ v-model="punNaziv"
     <h3 >Adresa:</h3>
 
   </v-flex>
-  <v-flex hidden-sm-and-up xs5>
+  <v-flex class="pa-4" hidden-sm-and-up xs5>
   </v-flex>
   <v-flex xs5>
 <h3 v-if="izmenaPodataka" class="podaci">{{adresa}}</h3>
 <v-text-field v-else
   class="podaciIzmena pa-0"
+    :rules="obaveznoPoljeRules"
 v-model="adresa"
 ></v-text-field>
   </v-flex>
@@ -135,7 +149,7 @@ v-model="adresa"
     <h3 >Mesto:</h3>
 
   </v-flex>
-  <v-flex hidden-sm-and-up xs5>
+  <v-flex class="pa-4" hidden-sm-and-up xs5>
   </v-flex>
   <v-flex xs5>
 <h3 v-if="izmenaPodataka" class="podaci">{{opstinaNaziv}}, {{gradNaziv}}</h3>
@@ -144,7 +158,7 @@ v-model="adresa"
   v-model="opstina"
     item-text="ops_naziv"
       item-value="ops_id"
-
+:rules="obaveznoPoljeRules"
 
 ></v-select>
 <v-select v-if="!izmenaPodataka"
@@ -152,7 +166,7 @@ v-model="adresa"
   v-model="grad"
     item-text="gra_naziv"
     item-value="gra_id"
-
+:rules="obaveznoPoljeRules"
     @change="spisakOpstina($event)"
 
 ></v-select>
@@ -163,13 +177,15 @@ v-model="adresa"
     <h3 >Telefon:</h3>
 
   </v-flex>
-  <v-flex hidden-sm-and-up xs5>
+  <v-flex class="pa-4" hidden-sm-and-up xs5>
   </v-flex>
   <v-flex xs5>
 <h3 v-if="izmenaPodataka" class="podaci">{{telefon|phoneNumber}}</h3>
 <v-text-field v-else
   class="podaciIzmena pa-0"
 v-model="telefon"
+  :rules="obaveznoPoljeRules"
+mask="+(###)##-###-######"
 ></v-text-field>
   </v-flex>
 </v-layout>
@@ -178,18 +194,21 @@ v-model="telefon"
     <h3 >Email:</h3>
 
   </v-flex>
-  <v-flex hidden-sm-and-up xs5>
+  <v-flex class="pa-4" hidden-sm-and-up xs5>
   </v-flex>
   <v-flex xs5>
 <h3 v-if="izmenaPodataka" class="podaci">{{email}}</h3>
 <v-text-field v-else
   class="podaciIzmena pa-0"
 v-model="email"
+  :rules="obaveznoPoljeRules"
+
 ></v-text-field>
   </v-flex>
 </v-layout>
   </v-flex>
 </v-layout>
+</v-form>
     </v-flex>
   </v-layout>
 </v-container>
@@ -199,6 +218,7 @@ v-model="email"
 export default {
   data(){
     return{
+      valid:true,
       opstinaNaziv:'',
       gradNaziv:'',
       opstine:[],
@@ -215,7 +235,18 @@ export default {
       opstina:'',
       grad:'',
       telefon:'',
-      email:''
+      email:'',
+      obaveznoPoljeRules: [
+        v => !!v || 'Obavezno polje.'
+      ],
+  maticniBrojRules: [
+        v => !!v || 'Morate uneti Maticni Broj',
+        v => (v && v.length == 8) || 'Maticni Broj mora sadrzati 8 cifara'
+      ],
+  pibRules: [
+        v => !!v || 'Morate uneti Pib',
+        v => (v && v.length == 9) || 'Pib mora sadrzati 9 cifara'
+      ]
     }
   },
 //   filters: {
@@ -256,6 +287,10 @@ this.gradNaziv=response.data.res[0].gra_naziv;
 
   },
   methods:{
+sacuvajIzmeneFirme(){
+  
+},
+
     odustani(){
       axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany",{
                     params:{ sid: localStorage.getItem('sessionid')  }
