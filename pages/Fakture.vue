@@ -10,41 +10,43 @@
   <v-flex xs5>
 
 
-              <h2>{{faktura.name}}</h2> <h3>{{faktura.date}}</h3>
+              <h2>{{faktura.kom_naziv}}</h2> <h3>{{faktura.date}}</h3>
             </v-flex>
             <v-flex xs4>
 
             </v-flex>
             <v-flex xs3>
-              <h2>{{faktura.total}} RSD</h2>
+              <h2>{{faktura.fak_total}} RSD</h2>
             </v-flex>
           </v-layout>
           </div>
           <v-card>
             <v-card-text>
-           <h1 class="text-xs-center pb-3">Broj fakture: 4/2018</h1>
-<v-flex  class="text-xs-center">
-          <h2 class="pa-4"></h2>
-                    <h2 class="pa-4"></h2>
-                              <h2 class="pa-4"></h2>
-                                        <h2 class="pa-4"></h2>
-                                                  <h2 class="pa-4"></h2>
-
-<v-layout row wrap>
-  <v-flex xs6>
-    <h2 class="pa-2">Datum prometa: 20.10.2018</h2>
-
-  </v-flex>
-  <v-flex xs6>
-          <h2 class="pa-2">Datum valute: 30.10.2018</h2>
-  </v-flex>
-</v-layout>
-
-            <h2 class="pt-5 text-xs-right">Ukupna cena:{{faktura.total}} RDS</h2>
-
-                  </v-flex>
-            <h2 class="pa-3">Mesto: Beograd</h2>
-
+           <h1 class="text-xs-center pb-3">Broj fakture: {{faktura.fak_brojFakture}}</h1>
+            <v-data-table
+            :items="faktura.stavkeFakture"
+            class="elevation-1"
+            hide-actions
+            hide-headers
+            no-data-text="Faktura nema stavke."
+            >
+              <template slot="items" slot-scope="props">
+                <td class="text-xs-center">{{ props.item.usp_naziv }}</td>
+                <td class="text-xs-center">{{ props.item.usp_cena }}</td>
+                <td class="text-xs-center">{{ props.item.usp_mera }}</td>
+                <td class="text-xs-center">{{ props.item.usp_kolicina }}</td>
+                <td class="text-xs-center">{{ props.item.usp_cena * props.item.usp_kolicina}}</td>
+              </template>
+            </v-data-table>
+            <h2 class="pt-5 text-xs-center">Ukupna cena: {{faktura.fak_total}} RSD</h2>
+            <v-layout row wrap>
+              <v-flex xs7>
+                <h2 class="pt-5 text-xs-left">Mesto: {{faktura.fak_mestoPrometa}}, {{faktura.fak_datumPrometa}}</h2>
+              </v-flex>
+              <v-flex xs5>
+                <h2 class="pt-5 text-xs-right">Plativo do: {{faktura.fak_valuta}}</h2>
+              </v-flex>
+            </v-layout>
             </v-card-text>
           </v-card>
         </v-expansion-panel-content>
@@ -179,25 +181,8 @@ export default {
       value: '',
       novafaktura: true,
       mesta:[],
-      fakture: [{
-          id: '1',
-          name: 'Enon Solutions',
-          date: '28.10.2018',
-          total: '1149.24'
-        },
-        {
-          id: '2',
-          name: 'Zlatna Kasika',
-          date: '15.12.2017',
-          total: '2379.00'
-        },
-        {
-          id: '3',
-          name: 'Grill Stefan',
-          date: '25.05.2017',
-          total: '514,35'
-        },
-      ],
+      // POPUNJAVA LISTU FAKTURA
+      fakture: [],
       proizvodNazivUsluge: '',
       proizvodJedinicaMere: '',
       proizvodKolicina: '',
@@ -362,12 +347,51 @@ export default {
       .then(response => {
         this.mesta = response.data.gradovi;
       });
+    // PREUZIMA SVE FAKTURE
     axios.get("http://837s121.mars-e1.mars-hosting.com/getInvoices", {
       params: {
         sid: localStorage.getItem('sessionid')
       }
     }).then(response => {
       console.log(response.data);
+      // MENJAM FORMAT DATUMA GDE POSTOJI I KONTROLISEM DA LI POSTOJI BROJ FAKTURE
+      for (var faktura of response.data.fakture){
+        // DA LI POSTOJI DATUM IZDAVANJA?
+        if(faktura.fak_datumIzdavanja!==null){
+          // RASTAVLJAM DATUM NA OSNOVU MINUSA
+          faktura.fak_datumIzdavanja=faktura.fak_datumIzdavanja.split('-');
+          // ISPISUJEM DATUM U FORMATU KOJI ZELIM PREKO TRENUTNOG PRIKAZA
+          faktura.fak_datumIzdavanja=faktura.fak_datumIzdavanja[2]+'.'+faktura.fak_datumIzdavanja[1]+'.'+faktura.fak_datumIzdavanja[0]+'.';
+        }
+        else{
+          faktura.fak_datumIzdavanja='Datum izdavanja nije naveden.'
+        }
+        // DA LI POSTOJI DATUM PROMETA?
+        if(faktura.fak_datumPrometa!==null){
+          // RASTAVLJAM DATUM NA OSNOVU MINUSA
+          faktura.fak_datumPrometa=faktura.fak_datumPrometa.split('-');
+          // ISPISUJEM DATUM U FORMATU KOJI ZELIM PREKO TRENUTNOG PRIKAZA
+          faktura.fak_datumPrometa=faktura.fak_datumPrometa[2]+'.'+faktura.fak_datumPrometa[1]+'.'+faktura.fak_datumPrometa[0]+'.';
+        }
+        else{
+          faktura.fak_datumPrometa='Datum prometa nije naveden.'
+        }
+        // DA LI POSTOJI DATUM VALUTE?
+        if(faktura.fak_valuta!==null){
+          // RASTAVLJAM DATUM NA OSNOVU MINUSA
+          faktura.fak_valuta=faktura.fak_valuta.split('-');
+          // ISPISUJEM DATUM U FORMATU KOJI ZELIM PREKO TRENUTNOG PRIKAZA
+          faktura.fak_valuta=faktura.fak_valuta[2]+'.'+faktura.fak_valuta[1]+'.'+faktura.fak_valuta[0]+'.';
+        }
+        else{
+          faktura.fak_valuta='Datum valute nije naveden.'
+        }
+        // DA LI POSTOJI BROJ FAKTURE?
+        if(faktura.fak_brojFakture===null){
+          faktura.fak_brojFakture='Samo izdate fakture imaju broj.'
+        }
+      }
+      this.fakture=response.data.fakture;
     });
   },
 
