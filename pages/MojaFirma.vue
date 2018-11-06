@@ -288,7 +288,28 @@ this.gradNaziv=response.data.res[0].gra_naziv;
   },
   methods:{
 sacuvajIzmeneFirme(){
-  
+  axios.patch('http://837s121.mars-e1.mars-hosting.com/updateCompany', {
+    sid: localStorage.getItem('sessionid'),
+    naziv: this.imeFirme,
+    punNaziv: this.punNaziv,
+    pib: this.pib,
+    ziroRacun: this.ziroRacun,
+    sifraDelatnosti: this.sifraDelatnosti,
+    opisDelatnosti: this.opisDelatnosti,
+    adresa: this.adresa,
+    telefon: this.telefon,
+    mejl: this.email,
+    opstina: this.opstina
+  })
+  .then(function (response) {
+    if(!response.data.status){
+      alert('Doslo je do greske prilikom pravljenja izmena.')
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+  this.izmenaPodataka=true;
 },
 
     odustani(){
