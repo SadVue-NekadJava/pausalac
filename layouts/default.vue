@@ -45,9 +45,9 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
-      <v-container>
+
         <nuxt />
-      </v-container>
+    
     </v-content>
 
     <v-footer class="opacity" :fixed="fixed" app>

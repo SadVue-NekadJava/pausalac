@@ -2,8 +2,14 @@
 <v-container  >
 
 
+
   <v-layout  row wrap>
-    <v-flex  class="forma  pr-5 pl-5 pb-4 pt-4"  md8 offset-md2 xl6 offset-xl3>
+    <v-flex   class="forma   pr-5 pl-5 pb-4 pt-4"  md8 offset-md2 xl6 offset-xl3>
+      <div class="relativni">
+
+
+<img :src="logo" class="slika" alt="">
+  </div>
 <div   >
 <h1 class="text-xs-center">{{imeFirme}}</h1>
 
@@ -45,7 +51,6 @@ v-model="punNaziv"
 ></v-text-field>
 </v-flex>
     </v-layout>
-
     <v-layout class="pt-4" row wrap>
 <v-flex  xs7>
 <h3 >Maticni broj:</h3>
@@ -219,6 +224,7 @@ export default {
   data(){
     return{
       valid:true,
+      logo:null,
       opstinaNaziv:'',
       gradNaziv:'',
       opstine:[],
@@ -282,7 +288,7 @@ this.telefon=response.data.res[0].fir_telefon;
 this.email=response.data.res[0].fir_mejl;
 this.opstinaNaziv=response.data.res[0].ops_naziv;
 this.gradNaziv=response.data.res[0].gra_naziv;
-
+this.logo=response.data.res[0].imgurl;
                  });
 
   },
@@ -374,6 +380,19 @@ sacuvajIzmeneFirme(){
 </script>
 
 <style >
+.relativni{
+  position:relative;
+}
+.slika{
+  z-index:1  ;
+  width: 200px;
+  height: 200px;
+  margin-top: 200px;
+  left:35%;
+  opacity: 0.5;
+
+  position: absolute;
+}
 .levoDugme{
   margin-right: 100px;
 }
@@ -388,7 +407,7 @@ sacuvajIzmeneFirme(){
   position: relative;
 }
 .podaci{
-  color:#68645a;
+  color:#68645a ;
   font-weight: 400;
 }
 input{
