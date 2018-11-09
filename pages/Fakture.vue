@@ -23,9 +23,10 @@
             </v-flex>
           </v-layout>
           </div>
-          <v-card>
-            <v-card-text>
-           <h1 class="text-xs-center pb-3">Broj fakture: {{faktura.fak_brojFakture}}</h1>
+          <v-card class="pa-2">
+            <v-card-text class="pa-0">
+           <h2 class="text-xs-center pb-3" v-if="faktura.fak_brojFakture!=='Samo izdate fakture mogu imati broj.'">Broj fakture: {{faktura.fak_brojFakture}}</h2>
+           <h2 class="text-xs-center pb-3" v-else><em>{{faktura.fak_brojFakture}}</em></h2>
             <v-data-table
             :items="faktura.stavkeFakture"
             class="elevation-1"
@@ -42,7 +43,7 @@
               </template>
             </v-data-table>
             <h2 class="pt-5 text-xs-center">Ukupna cena: {{faktura.fak_total|thousandSeparator}} RSD</h2>
-            <v-layout row wrap>
+            <v-layout row wrap >
               <v-flex xs7>
                 <h2 class="pt-5 text-xs-left">Mesto: {{faktura.fak_mestoPrometa}}, {{faktura.fak_datumPrometa}}</h2>
               </v-flex>
@@ -50,8 +51,17 @@
                 <h2 class="pt-5 text-xs-right">Plativo do: {{faktura.fak_valuta}}</h2>
               </v-flex>
             </v-layout>
+            <v-layout row wrap class="justify-center mb-1">
+              <v-btn color="error" @click="dugmeStoriniranjeFakture(faktura)">Storniraj</v-btn>
+            </v-layout>
             </v-card-text>
           </v-card>
+          <!-- BRISANJE FAKTURE -->
+          <div v-if="modal2" class="text-xs-center  modal pa-5">
+            <h1>Da li ste sigurni da zelite da stornirate fakturu "{{odabranaFaktura.kom_naziv}}"?</h1>
+            <v-btn @click="storiniranjeFakture(1)" color="warning">Da</v-btn>
+            <v-btn @click="storiniranjeFakture(0)" color="secondary">Ne</v-btn>
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-flex>
@@ -212,7 +222,10 @@ export default {
       ],
       // KONTROLA ZA DUGMAD
       valid: false,
-      opisFakture: ''
+      opisFakture: '',
+      // BRISANJE/ARHIVIRANJE FAKTURE
+      modal2: false,
+      odabranaFaktura: {}
     }
 
   },
@@ -333,6 +346,23 @@ export default {
             });
         }
       }
+    },
+    dugmeStoriniranjeFakture(faktura){
+      this.odabranaFaktura=faktura;
+      this.modal2=true;
+      console.log(this.odabranaFaktura);
+    },
+    storiniranjeFakture(n){
+      if(n){
+        axios.post("http://837s121.mars-e1.mars-hosting.com/cancelInvoice", {
+          sid: localStorage.getItem('sessionid'),
+          fakId: this.odabranaFaktura.fak_id
+        })
+        .then(response => {
+          console.log(response.data);
+        });
+      }
+      this.modal2=false;
     }
   },
   mounted() {
@@ -389,7 +419,7 @@ export default {
         }
         // DA LI POSTOJI BROJ FAKTURE?
         if(faktura.fak_brojFakture===null){
-          faktura.fak_brojFakture='Samo izdate fakture imaju broj.'
+          faktura.fak_brojFakture='Samo izdate fakture mogu imati broj.'
         }
       }
       this.fakture=response.data.fakture;
@@ -401,7 +431,6 @@ export default {
 <style scoped>
 .fadeIn {
   animation: test 0.5s;
-
 }
 /* RESETOVANJE STILOVA */
 .dugmeKreirajNovuFakturu{
@@ -439,8 +468,26 @@ export default {
 th {
   padding: 5px;
 }
+.theme--light.v-table{
+  cursor: pointer;
+}
 @media (min-width: 0)
 .flex .xs2 {
   max-width: 20%;
+}
+/* MODAL ZA BRISANJE FAKTURE */
+.modal{
+  width:50%;
+  z-index: 100;
+  opacity:1;
+  top: 30%;
+  left: 25%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background-color:white;
+  -webkit-box-shadow: 0px 2px 241px -3px rgba(0,0,0,1);
+  -moz-box-shadow: 0px 2px 241px -3px rgba(0,0,0,1);
+  box-shadow: 0px 2px 241px -3px rgba(0,0,0,1);
+  position:fixed;
 }
 </style>
