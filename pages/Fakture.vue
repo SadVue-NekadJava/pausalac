@@ -4,7 +4,10 @@
   <v-layout row wrap>
     <v-flex xs12 sm8 offset-sm2>
       <v-expansion-panel popout class="mt-3">
-        <v-expansion-panel-content class="pa-2" v-if="  novafaktura" v-for="faktura in fakture" :key="faktura.id">
+        <v-layout row wrap class="mb-1">
+          <v-btn class="d-block dugmeKreirajNovuFakturu ma-0 pa-0" @click="novafaktura=!novafaktura" v-if="novafaktura">Kreiraj novu Fakturu</v-btn>
+        </v-layout>
+        <v-expansion-panel-content class=" listaFaktura" v-if="novafaktura" v-for="faktura in fakture" :key="faktura.id">
           <div slot="header">
 <v-layout row wrap>
   <v-flex xs5>
@@ -52,16 +55,14 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-flex>
-    <v-flex xs2>
 
-    </v-flex>
-    <v-flex xs1 class="text-xs-center">
-      <v-btn class="elevation-11 mt-2" medium @click="novafaktura=!novafaktura" v-if="novafaktura">Kreiraj novu Fakturu</v-btn>
-    </v-flex>
   </v-layout>
   <v-layout row wrap>
     <v-flex xs12 class="fadeIn text-xs-center" v-if="!novafaktura">
       <v-form class="forma pa-3">
+        <v-layout class="justify-end">
+          <v-icon @click="novafaktura=true" class="iks">clear</v-icon>
+        </v-layout>
         <v-layout row wrap>
           <v-flex xs12>
             <v-select :rules="obaveznoPoljeRules" @input="fakturaSelekt($event)" light class="pa-3" :items="komitenti" item-text="kom_naziv" item-value="kom_id" v-model="komitentId" label=" Komitent"></v-select>
@@ -402,7 +403,21 @@ export default {
   animation: test 0.5s;
 
 }
+/* RESETOVANJE STILOVA */
+.dugmeKreirajNovuFakturu{
+  width: 100%;
+}
+.listaFaktura{
+  max-width: 100%;
+}
+/* DUGME IKS PRILIKOM PRAVLJENJA FAKTURE */
+.iks{
+  cursor:pointer;
 
+}
+.iks:hover{
+  transform:scale(1.4);
+}
 @keyframes test {
   from {
     transform: scale(0.9);
@@ -416,16 +431,16 @@ export default {
 
 }
 
-// GAZIM STILOVE SA DRUGIH FAJLOVA
+/* GAZIM STILOVE SA DRUGIH FAJLOVA */
 #wrapper{
   box-sizing: content-box;
 }
-// STIL ZA TABELU
+/* STIL ZA TABELU */
 th {
   padding: 5px;
 }
 @media (min-width: 0)
-.flex.xs2 {
+.flex .xs2 {
   max-width: 20%;
 }
 </style>
