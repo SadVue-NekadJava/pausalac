@@ -88,7 +88,7 @@
                 <p class="textLabel ">Iznos</p>
                 <div class=" manjaUplatnica">
                   <p class=" poljeUnosa">=
-                    <input class="unosiUplatnica" type="text" placeholder="Iznos" >
+                    <input class="unosiUplatnica" v-model="svrhaIsplateIzabrana.iznos" type="text" placeholder="Iznos" >
                   </p>
                 </div>
               </v-flex>
@@ -117,12 +117,12 @@
             <v-layout row wrap>
               <v-flex xs2>
                 <div class=" manjaUplatnica">
-                          <p class="poljeUnosa"> <input class="unosiUplatnica"  type="text" placeholder="model"></p>
+                          <p class="poljeUnosa"> <input class="unosiUplatnica" v-model="svrhaIsplateIzabrana.modelPlacanja" type="text" placeholder="model"></p>
                 </div>
               </v-flex>
               <v-flex xs9 offset-xs1>
                 <div class=" manjaUplatnica">
-                  <p class="poljeUnosa"> <input class="unosiUplatnica"  type="text" placeholder="poziv na broj"></p>
+                  <p class="poljeUnosa"> <input class="unosiUplatnica" v-model="svrhaIsplateIzabrana.pozivNaBroj"  type="text" placeholder="poziv na broj"></p>
 
                 </div>
               </v-flex>
@@ -132,10 +132,9 @@
                 <hr>
                 <p>datum izvrsenja</p>
               </v-flex>
-              <v-flex xs12 lg3>
-                <input type="checkbox"><span>hitno</span>
-
-              </v-flex>
+            
+              <v-btn small flat  class="mt-4" color="success">Stampaj </v-btn>
+            <v-btn small flat  class="mt-4" color="primary">Sacuvaj </v-btn>
             </div>
 
 
@@ -148,7 +147,7 @@
   <div class="text-xs-center">
 
 
-    <v-btn fixed large class="mt-4" color="success">Stampaj sve</v-btn>
+    <v-btn  large  class="mt-4" color="success">Stampaj sve</v-btn>
 
   </div>
 </v-container>
@@ -163,19 +162,31 @@ export default {
       svrhaIsplate: {
         dohodakPorez: {
           poruka: 'Uplata poreza na dohodak',
-          racun: '840-711122843-32'
+          racun: '840-711122843-32',
+          iznos:'',
+          modelPlacanja:'',
+            pozivNaBroj:''
         },
         doprinosZdravstvo: {
           poruka: 'Uplata doprinosa za zdravstveno osiguranje',
-          racun: '840-721325843-61'
+          racun: '840-721325843-61',
+          iznos:'',
+          modelPlacanja:'',
+            pozivNaBroj:''
         },
         doprinosNez: {
           poruka: 'Uplata doprinosa za osiguranje od nezaposlenosti',
-          racun: '840-721331843-06'
+          racun: '840-721331843-06',
+          iznos:'',
+          modelPlacanja:'',
+            pozivNaBroj:''
         },
         doprinosPio: {
           poruka: 'Uplata doprinosa za PIO',
-          racun: '840-721313843-74'
+          racun: '840-721313843-74',
+          iznos:'',
+          modelPlacanja:'',
+            pozivNaBroj:''
         }
 
 
@@ -212,6 +223,12 @@ export default {
 .unosiUplatnica{
   display: inline-block;
 width: 90%;
+}
+.unosiUplatnica::placeholder{
+  color:red;
+}
+.unosiUplatnica:focus::placeholder{
+  visibility: hidden;
 }
 .unosiUplatnica:focus{
   outline:none;
