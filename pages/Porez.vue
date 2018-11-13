@@ -1,178 +1,263 @@
 <template >
 <v-container>
 
-<v-layout class="mt-5" row wrap>
+  <v-layout class="mt-5" row wrap>
 
 
-<v-flex class="mt-5 " xs4>
+    <v-flex class="mt-5 " md4>
 
 
-  <v-flex  xs8 >
-    <div class="forma tabovi  pa-3 ma-2">
+      <v-flex md8>
+        <div @click="svrhaIsplateIzabrana=svrhaIsplate.dohodakPorez" class="forma tabovi  pa-3 ma-2">
 
 
-<h3>Porez na prihode</h3>
-    </div>
-  </v-flex>
-  <v-flex  xs8 >
-    <div class="forma tabovi pa-3 ma-2">
-<h3>Doprinos za zdravstveno osiguranje</h3>
-    </div>
-  </v-flex>
-  <v-flex  xs8 >
-    <div class="forma tabovi pa-3 ma-2">
+          <h3>Porez na prihode</h3>
+        </div>
+      </v-flex>
+      <v-flex md8>
+        <div @click="svrhaIsplateIzabrana=svrhaIsplate.doprinosZdravstvo" class="forma tabovi pa-3 ma-2">
+          <h3>Doprinos za zdravstveno osiguranje</h3>
+        </div>
+      </v-flex>
+      <v-flex md8>
+        <div @click="svrhaIsplateIzabrana=svrhaIsplate.doprinosNez" class="forma tabovi pa-3 ma-2">
 
 
-<h3>Doprinos za osiguranje za slucaj nezaposlenosti</h3>
-    </div>
-  </v-flex>
-  <v-flex  xs8 >
-    <div class="forma tabovi pa-3 ma-2">
+          <h3>Doprinos za osiguranje za slucaj nezaposlenosti</h3>
+        </div>
+      </v-flex>
+      <v-flex md8>
+        <div @click="svrhaIsplateIzabrana=svrhaIsplate.doprinosPio" class="forma tabovi pa-3 ma-2">
 
 
-<h3>Doprinos za pio</h3>
-    </div>
-  </v-flex>
-</v-flex>
-
-<v-flex class="forma pa-3"  xs8>
-  <div class="uplatnica">
-    <v-layout row wrap>
-
-
-      <v-flex class="mt-4 pr-2 pb-2" xs12 lg6>
-  <p class="textLabel mt-2 ml-3">Isplatilac</p>
-
-<div class="ml-2 uplatnica">
-</div>
-<p class="textLabel mt-2 ml-3">Svrha isplate</p>
-<div class="ml-2 uplatnica">
-</div>
-<p class="textLabel mt-2 ml-3">Primalac</p>
-<div class="ml-2 uplatnica">
-</div>
-<div>
-  <div class="d-flex mt-5">
-    <v-flex xs12 lg9 class="text-xs-center">
-      <hr>
-      <p>pecat i potpis platioca</p>
+          <h3>Doprinos za pio</h3>
+        </div>
+      </v-flex>
     </v-flex>
-  </div>
-  <div class="d-flex justify-end">
-    <v-flex xs12 lg9 class="text-xs-center">
-      <hr>
-      <p>mesto i datum prijema</p>
-    </v-flex>
-  </div>
-</div>
-</v-flex>
 
-<v-flex xs12 lg6 class="pa-2">
-<v-layout row wrap class="mt-1">
-  <v-flex class="malaPolja pr-2" xs2>
-    <p class="textLabel">Sifra placanja</p>
-    <div class=" manjaUplatnica">
-    </div>
-  </v-flex>
-  <v-flex class="malaPolja pr-2" xs2>
-    <p class="textLabel ">Valuta</p>
-    <div class=" manjaUplatnica">
-    </div>
-  </v-flex>
-  <v-flex class="malaPolja" xs8>
-    <p class="textLabel ">Iznos</p>
-      <div class=" manjaUplatnica">
-      </div>
-  </v-flex>
-</v-layout>
-<p class="textLabel">Racun platioca</p>
-  <div class="mt-1 manjaUplatnica">
-  </div>
-  <p class="textLabel">Model i poziv na broj (zaduzenje)</p>
-  <v-layout row wrap>
-    <v-flex xs2>
-      <div class=" manjaUplatnica">
-      </div>
-    </v-flex>
-    <v-flex xs9 offset-xs1>
-      <div class=" manjaUplatnica">
+    <v-flex class="forma pa-3" md8>
+      <div class="uplatnica">
+        <v-layout row wrap>
+
+
+          <v-flex class="mt-4 pr-2 pb-2" xs12 lg6>
+            <p class="textLabel mt-2 ml-3">Isplatilac</p>
+
+            <div class=" ml-2 uplatnica">
+              <p class="poljeUnosa">{{punNaziv}}, {{adresa}}, {{opstinaNaziv}}, {{gradNaziv}}</p>
+            </div>
+            <p class="textLabel mt-2 ml-3">Svrha isplate</p>
+            <div class="ml-2 uplatnica">
+              <p class="poljeUnosa">{{svrhaIsplateIzabrana.poruka}}</p>
+            </div>
+            <p class="textLabel mt-2 ml-3">Primalac</p>
+            <div class="ml-2 uplatnica">
+              <p class="poljeUnosa">Ministarstvo Finansija <br>Poreska Uprava </p>
+            </div>
+            <div>
+              <div class="d-flex mt-5">
+                <v-flex xs12 lg9 class="text-xs-center">
+                  <hr>
+                  <p>pecat i potpis platioca</p>
+                </v-flex>
+              </div>
+              <div class="d-flex justify-end">
+                <v-flex xs12 lg9 class="text-xs-center">
+                  <hr>
+                  <p>mesto i datum prijema</p>
+                </v-flex>
+              </div>
+            </div>
+          </v-flex>
+
+          <v-flex xs12 lg6 class="pa-2">
+            <v-layout row wrap class="mt-1">
+              <v-flex class="malaPolja pr-2" xs2>
+                <p class="textLabel">Sifra placanja</p>
+                <div class="  manjaUplatnica">
+                  <p class="poljeUnosa ">253</p>
+                </div>
+              </v-flex>
+              <v-flex class="malaPolja pr-2" xs2>
+                <p class="textLabel ">Valuta</p>
+                  <div class=" manjaUplatnica">
+                  <p class="ma-auto align-center">RSD</p>
+                </div>
+              </v-flex>
+              <v-flex class="malaPolja" xs8>
+                <p class="textLabel ">Iznos</p>
+                <div class=" manjaUplatnica">
+                  <p class=" poljeUnosa">=
+                    <input class="unosiUplatnica" type="text" placeholder="Iznos" >
+                  </p>
+                </div>
+              </v-flex>
+            </v-layout>
+            <p class="textLabel">Racun platioca</p>
+            <div class="mt-1 manjaUplatnica">
+              <p class="poljeUnosa">{{ziroRacun|accNumber}}</p>
+            </div>
+            <p class="textLabel">Model i poziv na broj (zaduzenje)</p>
+            <v-layout row wrap>
+              <v-flex xs2>
+                <div class=" manjaUplatnica">
+
+                </div>
+              </v-flex>
+              <v-flex xs9 offset-xs1>
+                <div class=" manjaUplatnica">
+                </div>
+              </v-flex>
+            </v-layout>
+            <p class="textLabel">Racun primaoca</p>
+            <div class="mt-1 manjaUplatnica">
+              <p class="poljeUnosa">{{svrhaIsplateIzabrana.racun}}</p>
+            </div>
+            <p class="textLabel">Model i poziv na broj (odobrenje)</p>
+            <v-layout row wrap>
+              <v-flex xs2>
+                <div class=" manjaUplatnica">
+                          <p class="poljeUnosa"> <input class="unosiUplatnica"  type="text" placeholder="model"></p>
+                </div>
+              </v-flex>
+              <v-flex xs9 offset-xs1>
+                <div class=" manjaUplatnica">
+                  <p class="poljeUnosa"> <input class="unosiUplatnica"  type="text" placeholder="poziv na broj"></p>
+
+                </div>
+              </v-flex>
+            </v-layout>
+            <div class="d-flex mt-5">
+              <v-flex xs12 lg9 class="text-xs-center">
+                <hr>
+                <p>datum izvrsenja</p>
+              </v-flex>
+              <v-flex xs12 lg3>
+                <input type="checkbox"><span>hitno</span>
+
+              </v-flex>
+            </div>
+
+
+
+          </v-flex>
+        </v-layout>
       </div>
     </v-flex>
   </v-layout>
-  <p class="textLabel">Racun primaoca</p>
-    <div class="mt-1 manjaUplatnica">
-    </div>
-    <p class="textLabel">Model i poziv na broj (odobrenje)</p>
-    <v-layout row wrap>
-      <v-flex xs2>
-        <div class=" manjaUplatnica">
-        </div>
-      </v-flex>
-      <v-flex xs9 offset-xs1>
-        <div class=" manjaUplatnica">
-        </div>
-      </v-flex>
-    </v-layout>
-    <div class="d-flex mt-5">
-      <v-flex xs12 lg9 class="text-xs-center">
-        <hr>
-        <p>datum izvrsenja</p>
-      </v-flex>
-      <v-flex xs12 lg3>
-        <input type="checkbox"><span>hitno</span>
-
-      </v-flex>
-    </div>
+  <div class="text-xs-center">
 
 
+    <v-btn fixed large class="mt-4" color="success">Stampaj sve</v-btn>
 
-</v-flex>
-  </v-layout>
-</div>
-</v-flex>
-</v-layout>
-<div class="text-xs-center">
-
-
-<v-btn fixed large  class="mt-4" color="success">Stampaj sve</v-btn>
-
-</div>
+  </div>
 </v-container>
-
 </template>
 
 <script>
 export default {
+
+  data() {
+    return {
+      svrhaIsplateIzabrana: {},
+      svrhaIsplate: {
+        dohodakPorez: {
+          poruka: 'Uplata poreza na dohodak',
+          racun: '840-711122843-32'
+        },
+        doprinosZdravstvo: {
+          poruka: 'Uplata doprinosa za zdravstveno osiguranje',
+          racun: '840-721325843-61'
+        },
+        doprinosNez: {
+          poruka: 'Uplata doprinosa za osiguranje od nezaposlenosti',
+          racun: '840-721331843-06'
+        },
+        doprinosPio: {
+          poruka: 'Uplata doprinosa za PIO',
+          racun: '840-721313843-74'
+        }
+
+
+      },
+      punNaziv: '',
+      ziroRacun: '',
+      adresa: '',
+      opstinaNaziv: '',
+      gradNaziv: ''
+    }
+  },
+  mounted() {
+    this.svrhaIsplateIzabrana = this.svrhaIsplate.dohodakPorez;
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany", {
+      params: {
+        sid: localStorage.getItem('sessionid')
+      }
+    }).then(response => {
+      console.log(response.data.res[0]);
+
+      this.punNaziv = response.data.res[0].fir_pun_naziv;
+      this.ziroRacun = response.data.res[0].fir_ziro_racun;
+      this.adresa = response.data.res[0].fir_adresa;
+      this.opstinaNaziv = response.data.res[0].ops_naziv;
+      this.gradNaziv = response.data.res[0].gra_naziv;
+    });
+
+  }
+
 }
 </script>
 
 <style >
-.malaPolja{
+.unosiUplatnica{
+  display: inline-block;
+width: 90%;
+}
+.unosiUplatnica:focus{
+  outline:none;
+}
+.poljeUnosa {
+  width:100%;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 8px;
+
+}
+
+.malaPolja {
   flex-direction: column;
   min-height: 45px;
   display: flex;
   justify-content: flex-end;
   box-sizing: border-box;
 }
-.manjaUplatnica{
+
+.manjaUplatnica {
   min-height: 30px;
-  border:1px solid black;
+  border: 1px solid black;
+  display: flex;
 }
-.textLabel{
+
+.textLabel {
   margin-bottom: 0px;
 }
-.uplatnica{
-  border:1px solid black;
-min-height: 60px;
+
+.uplatnica {
+  border: 1px solid black;
+  min-height: 60px;
+  display: flex;
 }
-.tabovi{
+
+.tabovi {
   cursor: pointer;
 
 }
-.tabovi:hover{
-  transform: scale(1.1);
+
+.tabovi:hover {
+  transform: scale(1.05);
 }
-.potpis{
+
+.potpis {
   width: 60%;
 }
 </style>

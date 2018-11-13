@@ -52,10 +52,10 @@ methods:{
           sid: localStorage.getItem('sessionid')
       }
     }).then(response => {
-    this.cifraMesecno=response.data.curYearincome ;
-this.procenatFakturisanogMesecno=response.data.curYearincomePercentage;
-this.procenatFakturisanogGodisnje=response.data.incomePercentage;
-this.cifraGodisnje=response.data.income;
+    this.cifraMesecno=response.data.  income ;
+this.procenatFakturisanogMesecno=response.data.incomePercentage;
+this.procenatFakturisanogGodisnje=response.data.curYearincomePercentage;
+this.cifraGodisnje=response.data.curYearincome;
     });
   }
 }

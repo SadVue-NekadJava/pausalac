@@ -255,20 +255,7 @@ export default {
       ]
     }
   },
-//   filters: {
-//   phoneNumber: function (value) {
-//
-//
-//     value = value.toString();
-//         var duzina=value.length;
-//         if(value.charAt(0)=='0'){
-//           return value.slice(0,3)+'/'+value.slice(4,7)+'-'+value.slice(8,duzina);
-//
-//         }
-//         else{
-//     return '+('+value.slice(0,3)+')'+value.slice(4,8)+'-'+value.slice(4,duzina);
-//   }}
-// },
+
   mounted(){
     axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany",{
                   params:{ sid: localStorage.getItem('sessionid')  }
