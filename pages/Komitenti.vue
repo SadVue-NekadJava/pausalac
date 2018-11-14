@@ -50,15 +50,13 @@
   </transition>
   <transition name="animacijaListe">
     <v-flex xs12 md6 offset-md3 v-if="!kreirajNovog" class="forma">
-<v-layout row wrap>
+<v-layout align-center justify-center row wrap>
 
-<v-flex xs2 md5 xl9>
 
-</v-flex>
-<v-flex xs3>
+
   <v-btn @click="kreiranjeNovog" v-if="!kreirajNovog" color="secondary lighten-2" class="mb-4 mt-4">Dodaj novog komitenta</v-btn>
 
-</v-flex>
+
 </v-layout>
 
 

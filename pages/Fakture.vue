@@ -1,22 +1,24 @@
 <template>
-<v-container id="wrapper">
-  <v-form ref="form" v-model="valid">
+<v-container  id="wrapper">
+  <v-form  ref="form" v-model="valid">
   <v-layout row wrap>
-    <v-flex xs12 sm8 offset-sm2>
-      <v-expansion-panel popout class="mt-3">
-        <v-layout row wrap class="mb-1">
-          <v-btn class="d-block dugmeKreirajNovuFakturu ma-0 pa-0" @click="novafaktura=!novafaktura" v-if="novafaktura">Kreiraj novu Fakturu</v-btn>
+    <v-flex   v-if="novafaktura" class="forma pa-4" xs12 sm8 offset-sm2>
+      <v-expansion-panel popout  >
+        <v-layout align-center justify-center  row wrap class="mb-1">
+          <v-btn class="secondary lighten-2 mb-3 mt-0" @click="novafaktura=!novafaktura" v-if="novafaktura">Kreiraj novu Fakturu</v-btn>
         </v-layout>
-        <v-expansion-panel-content class=" listaFaktura" v-if="novafaktura" v-for="faktura in fakture" :key="faktura.id">
-          <div slot="header">
-<v-layout row wrap>
-  <v-flex xs5>
+        <v-expansion-panel-content class=" listaFaktura" v-for="faktura in fakture" :key="faktura.id"  >
+          <div slot="header" >
+<v-layout  row wrap>
+  <v-flex   xs5>
 
 
-              <h2>{{faktura.kom_naziv}}</h2> <h3>{{faktura.date}}</h3>
+              <h2 :class="{'grey--text':faktura.fak_status==3}">{{faktura.kom_naziv}}</h2> <h3>{{faktura.date}}</h3>
             </v-flex>
-            <v-flex xs4>
-
+            <v-flex  xs4>
+<div class="storno mr-5"  v-if="faktura.fak_status==3">
+  <h2 class=" text-xs-center">Stornirano</h2>
+</div>
             </v-flex>
             <v-flex xs3>
               <h2>{{faktura.fak_total|thousandSeparator}} RSD</h2>
@@ -52,7 +54,7 @@
               </v-flex>
             </v-layout>
             <v-layout row wrap class="justify-center mb-1">
-              <v-btn color="error" @click="dugmeStoriniranjeFakture(faktura)">Storniraj</v-btn>
+              <v-btn v-if="faktura.fak_status!=3" color="error" @click="dugmeStoriniranjeFakture(faktura)">Storniraj</v-btn>
             </v-layout>
             </v-card-text>
           </v-card>
@@ -126,7 +128,7 @@
           </v-flex>
       </v-layout>
       <v-layout row wrap justify-center>
-            <v-btn class="pa-2" color="success" @click="dodajProizvod()">Dodaj proizvod</v-btn>
+            <v-btn class="px-3" color="success" @click="dodajProizvod()">Dodaj proizvod</v-btn>
       </v-layout>
       <v-layout row wrap>
           <v-flex>
@@ -429,14 +431,33 @@ export default {
 }
 </script>
 <style scoped>
+/* .listaFaktura{
+  opacity:0.6;
+} */
+.storno{
+color:#f10000 ;
+border:3px ridge #f10000 ;
+border-radius: 4px;
+min-height: 30px;
+
+}
+.klasa{
+  width:60%;
+  background-color:red;
+  color:white !important;
+  text-align: center;
+    transform:rotateZ(25deg);
+
+border-radius: 5px;
+}
 .fadeIn {
   animation: test 0.5s;
 }
 /* RESETOVANJE STILOVA */
-.dugmeKreirajNovuFakturu{
-  width: 100%;
-}
+
 .listaFaktura{
+  opacity:0.9;
+border-radius:6px;
   max-width: 100%;
 }
 /* DUGME IKS PRILIKOM PRAVLJENJA FAKTURE */

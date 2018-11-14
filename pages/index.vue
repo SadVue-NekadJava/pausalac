@@ -38,14 +38,14 @@ Resetovanje lozinke nije uspesno, unesite ispravan email
 
         </v-text-field>
         <h3 class="error--text ">{{errorMsgLogin}}</h3>
-        <v-btn large :disabled="!validLogin" @click="login" color="primary mt-3">Login</v-btn><br>
+        <v-btn large :disabled="!validLogin" @click="login" color="primary mt-3">Prijavi se</v-btn><br>
 
         <p @click="zaboravljenaSifra=true" class="zaboravljenaSifra pt-3">Zaboravljena sifra</p>
         <v-layout row wrap class="mb-0">
           <v-flex xs8 class="mb-0">
           </v-flex>
           <v-flex xs4>
-            <v-btn @click="registerUser=!registerUser" small color="secondary mt-5 mb-0">Register</v-btn>
+            <v-btn @click="registerUser=!registerUser" small color="secondary mt-5 mb-0">Registruj se</v-btn>
           </v-flex>
         </v-layout>
       </v-form>

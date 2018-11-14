@@ -211,6 +211,11 @@ v-model="email"
 ></v-text-field>
   </v-flex>
 </v-layout>
+<div  v-if="!izmenaPodataka" class="">
+
+<label class="labelSlike" for="izborSlike">Kliknite ovde da izmenite logo<input  id="izborSlike" type="file" @change="onFilePicked"></label>
+
+</div>
   </v-flex>
 </v-layout>
 </v-form>
@@ -223,8 +228,10 @@ v-model="email"
 export default {
   data(){
     return{
+
+      image:'',
       valid:true,
-      logo:null,
+      logo:'',
       opstinaNaziv:'',
       gradNaziv:'',
       opstine:[],
@@ -280,21 +287,60 @@ this.logo=response.data.res[0].imgurl;
 
   },
   methods:{
+onFilePicked(e){
+    this.image=e.target.files[0];
+
+},
+
+
+      //      pickFile () {
+      //          this.$refs.image.click ()
+      //      },
+      //
+   		// onFilePicked (e) {
+   		// 	const files = e.target.files
+   		// 	if(files[0] !== undefined) {
+   		// 		this.imageName = files[0].name
+   		// 		if(this.imageName.lastIndexOf('.') <= 0) {
+   		// 			return
+   		// 		}
+   		// 		const fr = new FileReader ()
+   		// 		fr.readAsDataURL(files[0])
+   		// 		fr.addEventListener('load', () => {
+   		// 			this.imageUrl = fr.result
+   		// 			this.imageFile = files[0] // this is an image file that can be sent to server...
+   		// 		})
+   		// 	} else {
+   		// 		this.imageName = ''
+   		// 		this.imageFile = ''
+   		// 		this.imageUrl = ''
+   		// 	}
+   		// },
+      //
+
+
+
+
+
+
+
 sacuvajIzmeneFirme(){
-  axios.patch('http://837s121.mars-e1.mars-hosting.com/updateCompany', {
-    sid: localStorage.getItem('sessionid'),
-    naziv: this.imeFirme,
-    punNaziv: this.punNaziv,
-    pib: this.pib,
-    ziroRacun: this.ziroRacun,
-    sifraDelatnosti: this.sifraDelatnosti,
-    opisDelatnosti: this.opisDelatnosti,
-    adresa: this.adresa,
-    telefon: this.telefon,
-    mejl: this.email,
-    opstina: this.opstina
-  })
-  .then(function (response) {
+  var fd=new FormData();
+  fd.append('logo',this.image);
+  fd.append('sid', localStorage.getItem('sessionid'));
+  fd.append('naziv', this.imeFirme);
+fd.append('punNaziv', this.punNaziv);
+fd.append('maticniBroj',this.maticniBroj);
+fd.append('pib', this.pib);
+fd.append('ziroRacun', this.ziroRacun);
+fd.append('sifraDelatnosti', this.sifraDelatnosti);
+fd.append('opisDelatnosti', this.opisDelatnosti);
+fd.append('adresa', this.adresa);
+fd.append('telefon', this.telefon);
+fd.append('mejl', this.email);
+fd.append('opstina', this.opstina);
+  axios.patch('http://837s121.mars-e1.mars-hosting.com/updateCompany',fd).then(
+    function (response) {
     if(!response.data.status){
       alert('Doslo je do greske prilikom pravljenja izmena.')
     }
@@ -367,11 +413,27 @@ sacuvajIzmeneFirme(){
 </script>
 
 <style >
+.labelSlike{
+  color:blue;
+  cursor:pointer;
+  display: block;
+  text-align: center;
+  margin-top:10px;
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+.labelSlike:hover{
+text-decoration:underline;
+}
+#izborSlike{
+display:none;
+}
+
 .relativni{
   position:relative;
 }
 .slika{
-  z-index:1  ;
+
   width: 200px;
   height: 200px;
   margin-top: 200px;

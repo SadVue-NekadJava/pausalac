@@ -132,7 +132,7 @@
                 <hr>
                 <p>datum izvrsenja</p>
               </v-flex>
-            
+
               <v-btn small flat  class="mt-4" color="success">Stampaj </v-btn>
             <v-btn small flat  class="mt-4" color="primary">Sacuvaj </v-btn>
             </div>
@@ -165,7 +165,7 @@ export default {
           racun: '840-711122843-32',
           iznos:'',
           modelPlacanja:'',
-            pozivNaBroj:''
+          pozivNaBroj:''
         },
         doprinosZdravstvo: {
           poruka: 'Uplata doprinosa za zdravstveno osiguranje',
@@ -200,6 +200,16 @@ export default {
   },
   mounted() {
     this.svrhaIsplateIzabrana = this.svrhaIsplate.dohodakPorez;
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getTaxDetails", {
+      params: {
+        sid: localStorage.getItem('sessionid')
+      }
+    }).then(response => {
+      this.svrhaIsplate=response.data.res;
+
+
+    });
+
     axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany", {
       params: {
         sid: localStorage.getItem('sessionid')
@@ -219,7 +229,7 @@ export default {
 }
 </script>
 
-<style >
+<style  >
 .unosiUplatnica{
   display: inline-block;
 width: 90%;
