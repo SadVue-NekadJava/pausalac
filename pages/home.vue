@@ -17,7 +17,7 @@
 </v-flex>
 
 <v-flex class="forma mt-5 pa-4"  xs10 offset-xs1>
-<h1>Ukupan promet u kalendarskog godini</h1>
+<h1>Ukupan promet u kalendarskoj godini</h1>
 <div class="mt-5 mr-5 ml-5 bar" >
 <div class="barHealth d-flex align-center":class='{barHealthRed:procenatFakturisanogGodisnje>80}' :style="{width:procenatFakturisanogGodisnje +'%'}">
 <h3 v-if="procenatFakturisanogGodisnje<50">{{cifraGodisnje|thousandSeparator  }} RSD</h3>
