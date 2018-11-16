@@ -27,10 +27,32 @@
         </v-list-tile>
 
 
-        <v-list-tile @click="logout" class="secondary" >
+<v-list-group
+  no-action
+  prepend-icon="settings"
+>
+
+<v-list-tile slot="activator">
+  <v-list-tile-title>Podesavanja</v-list-tile-title>
+</v-list-tile>
+  <v-list-tile to="/MojaFirma" >
+    <v-list-tile-title>Moja Firma</v-list-tile-title>
+  </v-list-tile>
+  <v-list-tile to="/MojiPodaci">
+    <v-list-tile-title>Moji Podaci</v-list-tile-title>
+  </v-list-tile>
+</v-list-group>
+
+
+
+
+
+
+
+        <v-list-tile @click="logout"  class="white--text secondary" >
           <v-list-tile-action>
           </v-list-tile-action>
-          <v-list-tile-title>Logout</v-list-tile-title>
+          <v-list-tile-title >Logout</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
@@ -46,10 +68,12 @@
         <v-menu offset-y open-on-hover>
               <v-btn
                 slot="activator">
+                <v-icon left>settings</v-icon>
                 Podesavanje
               </v-btn>
               <v-list   >
                 <v-list-tile
+
             to="/MojaFirma">
                   <v-list-tile-title>Moja Firma</v-list-tile-title>
                 </v-list-tile>
