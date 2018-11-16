@@ -1,2 +1,0 @@
-# pausalac
-projekat
