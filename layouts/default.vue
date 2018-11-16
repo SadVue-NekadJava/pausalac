@@ -25,6 +25,8 @@
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+
+
         <v-list-tile @click="logout" class="secondary" >
           <v-list-tile-action>
           </v-list-tile-action>
@@ -41,13 +43,37 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn flat v-for="(item,i) in items" :key="i" :to="item.to"><v-icon left>{{item.icon}}</v-icon>{{item.title}}</v-btn>
+        <v-menu offset-y open-on-hover>
+              <v-btn
+                slot="activator">
+                Podesavanje
+              </v-btn>
+              <v-list   >
+                <v-list-tile
+            to="/MojaFirma">
+                  <v-list-tile-title>Moja Firma</v-list-tile-title>
+                </v-list-tile>
+                <v-list-tile
+            to="/MojiPodaci">
+                  <v-list-tile-title  >Moji Podaci</v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+            </v-menu>
+
+
+
+
+
+
+
+
 <v-btn @click="logout" color="secondary">logout</v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
 
         <nuxt />
-    
+
     </v-content>
 
     <v-footer class="opacity" :fixed="fixed" app>
@@ -71,8 +97,8 @@
           { icon: 'description', title: 'Fakture', to: '/Fakture' },
           { icon: 'folder_special', title: 'Porez', to: '/Porez' },
             { icon: 'account_box', title: 'Komitenti', to: '/Komitenti' },
-                    { icon: 'local_hospital', title: 'Zdravstvene knjizice', to: '/ZKnjizice' },
-                            { icon: 'business', title: 'Moja Firma', to: '/MojaFirma' },
+                    { icon: 'local_hospital', title: 'Zdravstvene knjizice', to: '/ZKnjizice' }
+                            // { icon: 'business', title: 'Moja Firma', to: '/MojaFirma' },
         ],
         miniVariant: false,
         right: true,
