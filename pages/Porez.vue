@@ -8,26 +8,26 @@
 
 
       <v-flex md8>
-        <div @click="svrhaIsplateIzabrana=svrhaIsplate.dohodakPorez" class="forma tabovi  pa-3 ma-2">
+        <div @click="svrhaIsplateIzabrana=svrhaIsplate[0]" class="forma tabovi  pa-3 ma-2">
 
 
           <h3>Porez na prihode</h3>
         </div>
       </v-flex>
       <v-flex md8>
-        <div @click="svrhaIsplateIzabrana=svrhaIsplate.doprinosZdravstvo" class="forma tabovi pa-3 ma-2">
+        <div @click="svrhaIsplateIzabrana=svrhaIsplate[1]" class="forma tabovi pa-3 ma-2">
           <h3>Doprinos za zdravstveno osiguranje</h3>
         </div>
       </v-flex>
       <v-flex md8>
-        <div @click="svrhaIsplateIzabrana=svrhaIsplate.doprinosNez" class="forma tabovi pa-3 ma-2">
+        <div @click="svrhaIsplateIzabrana=svrhaIsplate[2]" class="forma tabovi pa-3 ma-2">
 
 
           <h3>Doprinos za osiguranje za slucaj nezaposlenosti</h3>
         </div>
       </v-flex>
       <v-flex md8>
-        <div @click="svrhaIsplateIzabrana=svrhaIsplate.doprinosPio" class="forma tabovi pa-3 ma-2">
+        <div @click="svrhaIsplateIzabrana=svrhaIsplate[3]" class="forma tabovi pa-3 ma-2">
 
 
           <h3>Doprinos za pio</h3>
@@ -86,7 +86,7 @@
               </v-flex>
               <v-flex class="malaPolja" xs8>
                 <p class="textLabel ">Iznos</p>
-                <div class=" manjaUplatnica">
+                <div class="blue-grey lighten-4 manjaUplatnica">
                   <p class=" poljeUnosa">=
                     <input class="unosiUplatnica" v-model="svrhaIsplateIzabrana.iznos" type="text" placeholder="Iznos" >
                   </p>
@@ -116,12 +116,12 @@
             <p class="textLabel">Model i poziv na broj (odobrenje)</p>
             <v-layout row wrap>
               <v-flex xs2>
-                <div class=" manjaUplatnica">
+                <div class="blue-grey lighten-4 manjaUplatnica">
                           <p class="poljeUnosa"> <input class="unosiUplatnica" v-model="svrhaIsplateIzabrana.modelPlacanja" type="text" placeholder="model"></p>
                 </div>
               </v-flex>
               <v-flex xs9 offset-xs1>
-                <div class=" manjaUplatnica">
+                <div class="blue-grey lighten-4 manjaUplatnica">
                   <p class="poljeUnosa"> <input class="unosiUplatnica" v-model="svrhaIsplateIzabrana.pozivNaBroj"  type="text" placeholder="poziv na broj"></p>
 
                 </div>
@@ -134,7 +134,7 @@
               </v-flex>
 
               <v-btn small flat  class="mt-4" color="success">Stampaj </v-btn>
-            <v-btn small flat  class="mt-4" color="primary">Sacuvaj </v-btn>
+            <v-btn small flat @click="sacuvajIzmeneNaloga"  class="mt-4" color="primary">Sacuvaj </v-btn>
             </div>
 
 
@@ -159,38 +159,42 @@ export default {
   data() {
     return {
       svrhaIsplateIzabrana: {},
-      svrhaIsplate: {
-        dohodakPorez: {
+      svrhaIsplate: [
+         {
           poruka: 'Uplata poreza na dohodak',
           racun: '840-711122843-32',
           iznos:'',
           modelPlacanja:'',
-          pozivNaBroj:''
+          pozivNaBroj:'',
+          svrha:1
         },
-        doprinosZdravstvo: {
+       {
           poruka: 'Uplata doprinosa za zdravstveno osiguranje',
           racun: '840-721325843-61',
           iznos:'',
           modelPlacanja:'',
-            pozivNaBroj:''
+            pozivNaBroj:'',
+            svrha:2
         },
-        doprinosNez: {
+       {
           poruka: 'Uplata doprinosa za osiguranje od nezaposlenosti',
           racun: '840-721331843-06',
           iznos:'',
           modelPlacanja:'',
-            pozivNaBroj:''
+            pozivNaBroj:'',
+            svrha:3
         },
-        doprinosPio: {
+         {
           poruka: 'Uplata doprinosa za PIO',
           racun: '840-721313843-74',
           iznos:'',
           modelPlacanja:'',
-            pozivNaBroj:''
-        }
+            pozivNaBroj:'',
+            svrha:4
+        }]
 
 
-      },
+      ,
       punNaziv: '',
       ziroRacun: '',
       adresa: '',
@@ -198,14 +202,44 @@ export default {
       gradNaziv: ''
     }
   },
+  methods:{
+
+sacuvajIzmeneNaloga(){
+
+    axios.post("http://837s121.mars-e1.mars-hosting.com/postTaxDetails", {
+        sid: localStorage.getItem('sessionid'),
+        cifra:this.svrhaIsplateIzabrana.iznos,
+        poziv:this.svrhaIsplateIzabrana.pozivNaBroj,
+        svrha: this.svrhaIsplateIzabrana.svrha,
+        model:this.svrhaIsplateIzabrana.modelPlacanja
+
+    }).then(response => {
+
+
+
+
+
+
+    });
+}
+  },
   mounted() {
-    this.svrhaIsplateIzabrana = this.svrhaIsplate.dohodakPorez;
+    this.svrhaIsplateIzabrana = this.svrhaIsplate[0];
     axios.get("http://837s121.mars-e1.mars-hosting.com/getTaxDetails", {
       params: {
         sid: localStorage.getItem('sessionid')
       }
     }).then(response => {
-      this.svrhaIsplate=response.data.res;
+      console.log(response.data.res);
+
+      for(var i=0;i<response.data.res.length; i++){
+          this.svrhaIsplate[i].iznos=response.data.res[i].por_cifra;
+              this.svrhaIsplate[i].modelPlacanja=response.data.res[i].por_model;
+                  this.svrhaIsplate[i].pozivNaBroj=response.data.res[i].por_poziv;
+
+      }
+
+
 
 
     });
