@@ -27,7 +27,7 @@
 </div>
 </div >
 <hr>
-<v-form refs="form" v-model="valid">
+<v-form class="relativni unutrasnjaForma" refs="form" v-model="valid">
 
 
 
@@ -431,6 +431,12 @@ display:none;
 
 .relativni{
   position:relative;
+}
+.unutrasnjaForma{
+  background-color: rgba(255,255,255,0.5);
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 15px;
 }
 .slika{
 
