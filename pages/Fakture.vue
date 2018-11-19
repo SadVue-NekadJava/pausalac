@@ -5,7 +5,7 @@
     <v-flex   v-if="novafaktura" class="forma pa-4" xs12 sm8 offset-sm2>
       <v-expansion-panel popout  >
         <v-layout align-center justify-center  row wrap class="mb-1">
-          <v-btn class="secondary lighten-2 mb-3 mt-0" @click="novafaktura=!novafaktura" v-if="novafaktura">Kreiraj novu Fakturu</v-btn>
+          <v-btn class="success mb-3 mt-0" @click="novafaktura=!novafaktura" v-if="novafaktura">Kreiraj novu Fakturu</v-btn>
         </v-layout>
         <v-expansion-panel-content class=" listaFaktura" v-for="faktura in fakture" :key="faktura.id"  >
           <div slot="header" >

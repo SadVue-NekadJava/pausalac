@@ -40,7 +40,7 @@
         <v-text-field v-model="komEmail" label="E-mail"></v-text-field>
         <v-text-field v-model="komTelefon" mask="+(###)##-###-######"  label="Telefon"></v-text-field>
 
-        <v-btn :disabled="!valid" color="primary" @click="sacuvajNovogKomitenta">
+        <v-btn :disabled="!valid" color="success" @click="sacuvajNovogKomitenta">
           Sacuvaj
         </v-btn>
         <v-btn @click="kreirajNovog=!kreirajNovog" class="secondary mb-4 mt-4" v-if="kreirajNovog">Odustani</v-btn>
@@ -54,7 +54,7 @@
 
 
 
-  <v-btn @click="kreiranjeNovog" v-if="!kreirajNovog" color="secondary lighten-2" class="mb-4 mt-4">Dodaj novog komitenta</v-btn>
+  <v-btn @click="kreiranjeNovog" v-if="!kreirajNovog" color="success" class="mb-4 mt-4">Dodaj novog komitenta</v-btn>
 
 
 </v-layout>

@@ -50,5 +50,9 @@ Vue.use(Vuetify, {
     VChip,
     VDataTable
 
-  }
+  },
+  theme: {
+   primary: '#2980b9',
+   success:'#27ae60'
+ }
 })

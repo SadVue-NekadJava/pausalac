@@ -65,7 +65,8 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn flat v-for="(item,i) in items" :key="i" :to="item.to"><v-icon left>{{item.icon}}</v-icon>{{item.title}}</v-btn>
-        <v-menu offset-y open-on-hover>
+        <v-menu offset-y open-on-hover
+          transition="slide-y-transition">
               <v-btn
                 slot="activator">
                 <v-icon left>settings</v-icon>
@@ -110,7 +111,8 @@
 </template>
 
 <script>
-  export default {
+
+  export default {  
     data () {
       return {
         logged:this.$store.state.logged,
