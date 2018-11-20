@@ -15,7 +15,7 @@
 
 
 
-<v-btn v-if="izmenaPodataka"  @click="dugmeIzmena "    color="warning ">Izmeni</v-btn>
+<v-btn v-if="izmenaPodataka"  @click="dugmeIzmena"    color="warning ">Izmeni</v-btn>
 <v-btn v-if="!izmenaPodataka" @click="odustani"    color="secondary">Odustani</v-btn>
 
 <v-btn :disabled="!valid" @click="sacuvajIzmeneFirme" v-if="!izmenaPodataka" color="primary">Sacuvaj</v-btn>
@@ -30,35 +30,40 @@
 <v-layout row wrap>
   <v-flex>
     <v-layout class="pt-4" row wrap>
-<v-flex  xs7>
-<h3 >Ime i prezime</h3>
-</v-flex>
-<v-flex class="pa-4" hidden-sm-and-up xs5>
-</v-flex>
-<v-flex xs5>
-  <h3 v-if="izmenaPodataka" class="podaci">{{punNaziv}}</h3>
-<v-text-field v-else
-  class="podaciIzmena pa-0"
-v-model="Ime"
-  :rules="obaveznoPoljeRules"
-></v-text-field>
-</v-flex>
+      <v-flex  xs7>
+      <h3 >Ime i prezime</h3>
+      </v-flex>
+      <v-flex class="pa-4" hidden-sm-and-up xs5>
+      </v-flex>
+      <v-flex xs5 v-if="izmenaPodataka">
+        <h3 class="podaci">{{ime}} {{prezime}}</h3>
+      </v-flex>
+      <v-flex xs5 v-else>
+        <v-text-field
+          class="podaciIzmena pa-0"
+          v-model="ime"
+          :rules="obaveznoPoljeRules"
+        ></v-text-field>
+        <v-text-field
+          class="podaciIzmena pa-0"
+          v-model="prezime"
+          :rules="obaveznoPoljeRules"
+        ></v-text-field>
+      </v-flex>
     </v-layout>
     <v-layout class="pt-4" row wrap>
 <v-flex  xs7>
-<h3 >Ime oca</h3>
+<h3 >Ime roditelja</h3>
 </v-flex>
 <v-flex class="pa-4" hidden-sm-and-up xs5>
 </v-flex>
 <v-flex xs5>
-  <h3 v-if="izmenaPodataka" class="podaci">{{maticniBroj}}</h3>
-  <v-text-field v-else
-    class="podaciIzmena pa-0"
-:rules="maticniBrojRules"
-  v-model="maticniBroj"
-    mask="########"
-
-  ></v-text-field>
+  <h3 v-if="izmenaPodataka" class="podaci">{{imeRoditelja}}</h3>
+<v-text-field v-else
+  class="podaciIzmena pa-0"
+v-model="imeRoditelja"
+  :rules="obaveznoPoljeRules"
+></v-text-field>
 </v-flex>
     </v-layout>
     <v-layout class="pt-4" row wrap>
@@ -68,12 +73,12 @@ v-model="Ime"
 <v-flex class="pa-4" hidden-sm-and-up xs5>
 </v-flex>
 <v-flex xs5>
-  <h3 v-if="izmenaPodataka" class="podaci">{{pib}}</h3>
+  <h3 v-if="izmenaPodataka" class="podaci">{{jmbg}}</h3>
   <v-text-field v-else
     class="podaciIzmena pa-0"
-  v-model="pib"
-    :rules="pibRules"
-    mask="#########"
+  v-model="jmbg"
+    mask="#############"
+  :rules="obaveznoPoljeRules"
   ></v-text-field>
 </v-flex>
     </v-layout>
@@ -84,12 +89,11 @@ v-model="Ime"
 <v-flex class="pa-4" hidden-sm-and-up xs5>
 </v-flex>
 <v-flex xs5>
-  <h3 v-if="izmenaPodataka" class="podaci">{{ziroRacun|accNumber}}</h3>
+  <h3 v-if="izmenaPodataka" class="podaci">{{strucnaSprema}}</h3>
   <v-text-field v-else
     class="podaciIzmena pa-0"
   v-model="ziroRacun"
-        mask="###-#############-##"
-  :rules="obaveznoPoljeRules"
+    :rules="obaveznoPoljeRules"
   ></v-text-field>
 </v-flex>
     </v-layout>
@@ -100,11 +104,11 @@ v-model="Ime"
 <v-flex class="pa-4" hidden-sm-and-up xs5>
 </v-flex>
 <v-flex xs5>
-  <h3 v-if="izmenaPodataka" class="podaci">{{sifraDelatnosti}}</h3>
+  <h3 v-if="izmenaPodataka" class="podaci">{{uRadnomOdnosu}}</h3>
   <v-text-field v-else
     class="podaciIzmena pa-0"
-      :rules="obaveznoPoljeRules"
-  v-model="sifraDelatnosti"
+    :rules="obaveznoPoljeRules"
+    v-model="uRadnomOdnosu"
   ></v-text-field>
 </v-flex>
     </v-layout>
@@ -115,11 +119,11 @@ v-model="Ime"
   <v-flex class="pa-4" hidden-sm-and-up xs5>
   </v-flex>
   <v-flex xs5>
-  <h3 v-if="izmenaPodataka" class="podaci">{{opisDelatnosti}}</h3>
+  <h3 v-if="izmenaPodataka" class="podaci">{{pol}}</h3>
   <v-text-field v-else
   :rules="obaveznoPoljeRules"
     class="podaciIzmena pa-0"
-  v-model="opisDelatnosti"
+  v-model="pol"
   ></v-text-field>
   </v-flex>
     </v-layout>
@@ -150,10 +154,10 @@ v-model="adresa"
   <v-flex class="pa-4" hidden-sm-and-up xs5>
   </v-flex>
   <v-flex xs5>
-<h3 v-if="izmenaPodataka" class="podaci">{{opstinaNaziv}}, {{gradNaziv}}</h3>
+<h3 v-if="izmenaPodataka" class="podaci">{{opstina}}, {{grad}}</h3>
 <v-select v-if="!izmenaPodataka"
   :items="opstine"
-  v-model="opstina"
+  v-model="opstinaId"
     item-text="ops_naziv"
       item-value="ops_id"
 :rules="obaveznoPoljeRules"
@@ -161,7 +165,7 @@ v-model="adresa"
 ></v-select>
 <v-select v-if="!izmenaPodataka"
   :items="gradovi"
-  v-model="grad"
+  v-model="gradId"
     item-text="gra_naziv"
     item-value="gra_id"
 :rules="obaveznoPoljeRules"
@@ -170,45 +174,6 @@ v-model="adresa"
 ></v-select>
 </v-flex>
 </v-layout>
-<v-layout class="pt-3" row wrap>
-  <v-flex xs7>
-    <h3 >Telefon:</h3>
-
-  </v-flex>
-  <v-flex class="pa-4" hidden-sm-and-up xs5>
-  </v-flex>
-  <v-flex xs5>
-<h3 v-if="izmenaPodataka" class="podaci">{{telefon|phoneNumber}}</h3>
-<v-text-field v-else
-  class="podaciIzmena pa-0"
-v-model="telefon"
-  :rules="obaveznoPoljeRules"
-mask="+(###)##-###-######"
-></v-text-field>
-  </v-flex>
-</v-layout>
-<v-layout class="pt-3"  row wrap>
-  <v-flex  xs7>
-    <h3 >Email:</h3>
-
-  </v-flex>
-  <v-flex class="pa-4" hidden-sm-and-up xs5>
-  </v-flex>
-  <v-flex xs5>
-<h3 v-if="izmenaPodataka" class="podaci">{{email}}</h3>
-<v-text-field v-else
-  class="podaciIzmena pa-0"
-v-model="email"
-  :rules="obaveznoPoljeRules"
-
-></v-text-field>
-  </v-flex>
-</v-layout>
-<div  v-if="!izmenaPodataka" class="">
-
-<label class="labelSlike" for="izborSlike">Kliknite ovde da izmenite logo<input  id="izborSlike" type="file" @change="onFilePicked"></label>
-
-</div>
   </v-flex>
 </v-layout>
 </v-form>
@@ -221,15 +186,34 @@ v-model="email"
 export default {
   data(){
     return{
-
-      image:'',
+      // NOVE PROMENLJIVE
+      // KORISNICKI PODACI
+      ime: '',
+      prezime: '',
+      imeRoditelja:'',
+      jmbg: '',
+      strucnaSprema: '',
+      uRadnomOdnosu: '',
+      pol: '',
+      adresa: '',
+      opstina:'',
+      opstinaId:'',
+      grad:'',
+      graId:'',
+      // BOOLEAN KOJI SALTA INPUT-> P
+      izmenaPodataka:true,
+      // NIZOVI ZA SELEKT
+      gradovi:'',
+      opstine:'',
+      // NESTO(?)
       valid:true,
+      // STARE PROMENLJIVE
+      image:'',
       logo:'',
       opstinaNaziv:'',
       gradNaziv:'',
       opstine:[],
       gradovi:[],
-      izmenaPodataka:true,
       imeFirme:'',
       punNaziv:'',
       maticniBroj:'',
@@ -237,11 +221,6 @@ export default {
       sifraDelatnosti:'',
       opisDelatnosti:'',
       ziroRacun:'',
-      adresa:'',
-      opstina:'',
-      grad:'',
-      telefon:'',
-      email:'',
       obaveznoPoljeRules: [
         v => !!v || 'Obavezno polje.'
       ],
@@ -257,26 +236,44 @@ export default {
   },
 
   mounted(){
-    axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany",{
-                  params:{ sid: localStorage.getItem('sessionid')  }
-                 }).then(response => {
-console.log(response.data.res[0]);
-this.imeFirme=response.data.res[0].fir_naziv;
-this.punNaziv=response.data.res[0].fir_pun_naziv;
-this.maticniBroj=response.data.res[0].fir_maticni_broj;
-this.pib=response.data.res[0].fir_pib;
-this.sifraDelatnosti=response.data.res[0].fir_sifra_delatnosti;
-this.opisDelatnosti=response.data.res[0].fir_opis_delatnosti;
-this.ziroRacun=response.data.res[0].fir_ziro_racun;
-this.adresa=response.data.res[0].fir_adresa;
-this.opstina=response.data.res[0].ops_id;
-this.grad=response.data.res[0].gra_id;
-this.telefon=response.data.res[0].fir_telefon;
-this.email=response.data.res[0].fir_mejl;
-this.opstinaNaziv=response.data.res[0].ops_naziv;
-this.gradNaziv=response.data.res[0].gra_naziv;
-this.logo=response.data.res[0].imgurl;
-                 });
+    axios.get("http://837s121.mars-e1.mars-hosting.com/getUser",{
+      params:{ sid: localStorage.getItem('sessionid')  }
+    }).then(response => {
+      console.log(response.data.res[0]);
+      var podaci=response.data.res[0];
+      this.ime=podaci.kpd_ime;
+      this.prezime=podaci.kpd_prezime;
+      this.imeRoditelja=podaci.kpd_imeRoditelja;
+      this.jmbg=podaci.kpd_jmbg;
+      this.strucnaSprema=podaci.kpd_strucnaSprema;
+      this.uRadnomOdnosu=podaci.kpd_uRadnomOdnosu;
+      this.pol=podaci.kpd_pol;
+      this.adresa=podaci.kpd_adresa;
+      this.opstina=podaci.opstina;
+      this.opsticnaId=podaci.ops_id;
+      this.grad=podaci.grad;
+      this.gradId=podaci.gradId;
+    });
+
+    // axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany",{
+    //   params:{ sid: localStorage.getItem('sessionid')  }
+    // }).then(response => {
+    //   console.log(response.data.res[0]);
+    //   this.imeFirme=response.data.res[0].fir_naziv;
+    //   this.punNaziv=response.data.res[0].fir_pun_naziv;
+    //   this.maticniBroj=response.data.res[0].fir_maticni_broj;
+    //   this.pib=response.data.res[0].fir_pib;
+    //   this.sifraDelatnosti=response.data.res[0].fir_sifra_delatnosti;
+    //   this.opisDelatnosti=response.data.res[0].fir_opis_delatnosti;
+    //   this.ziroRacun=response.data.res[0].fir_ziro_racun;
+    //   this.opstina=response.data.res[0].ops_id;
+    //   this.grad=response.data.res[0].gra_id;
+    //   this.telefon=response.data.res[0].fir_telefon;
+    //   this.email=response.data.res[0].fir_mejl;
+    //   this.opstinaNaziv=response.data.res[0].ops_naziv;
+    //   this.gradNaziv=response.data.res[0].gra_naziv;
+    //   this.logo=response.data.res[0].imgurl;
+    // });
 
   },
   methods:{
@@ -291,54 +288,54 @@ this.logo=response.data.res[0].imgurl;
 
 
 sacuvajIzmeneFirme(){
-  var fd=new FormData();
-  fd.append('logo',this.image);
-  fd.append('sid', localStorage.getItem('sessionid'));
-  fd.append('naziv', this.imeFirme);
-fd.append('punNaziv', this.punNaziv);
-fd.append('maticniBroj',this.maticniBroj);
-fd.append('pib', this.pib);
-fd.append('ziroRacun', this.ziroRacun);
-fd.append('sifraDelatnosti', this.sifraDelatnosti);
-fd.append('opisDelatnosti', this.opisDelatnosti);
-fd.append('adresa', this.adresa);
-fd.append('telefon', this.telefon);
-fd.append('mejl', this.email);
-fd.append('opstina', this.opstina);
-  axios.patch('http://837s121.mars-e1.mars-hosting.com/updateCompany',fd).then(
-    function (response) {
-    if(!response.data.status){
-      alert('Doslo je do greske prilikom pravljenja izmena.')
-    }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-  this.izmenaPodataka=true;
+//   var fd=new FormData();
+//   fd.append('logo',this.image);
+//   fd.append('sid', localStorage.getItem('sessionid'));
+//   fd.append('naziv', this.imeFirme);
+// fd.append('punNaziv', this.punNaziv);
+// fd.append('maticniBroj',this.maticniBroj);
+// fd.append('pib', this.pib);
+// fd.append('ziroRacun', this.ziroRacun);
+// fd.append('sifraDelatnosti', this.sifraDelatnosti);
+// fd.append('opisDelatnosti', this.opisDelatnosti);
+// fd.append('adresa', this.adresa);
+// fd.append('telefon', this.telefon);
+// fd.append('mejl', this.email);
+// fd.append('opstina', this.opstina);
+//   axios.patch('http://837s121.mars-e1.mars-hosting.com/updateCompany',fd).then(
+//     function (response) {
+//     if(!response.data.status){
+//       alert('Doslo je do greske prilikom pravljenja izmena.')
+//     }
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
+//   this.izmenaPodataka=true;
 },
 
     odustani(){
-      axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany",{
-                    params:{ sid: localStorage.getItem('sessionid')  }
-                   }).then(response => {
-    console.log(response.data.res[0]);
-    this.imeFirme=response.data.res[0].fir_naziv;
-    this.punNaziv=response.data.res[0].fir_pun_naziv;
-    this.maticniBroj=response.data.res[0].fir_maticni_broj;
-    this.pib=response.data.res[0].fir_pib;
-    this.sifraDelatnosti=response.data.res[0].fir_sifra_delatnosti;
-    this.opisDelatnosti=response.data.res[0].fir_opis_delatnosti;
-    this.ziroRacun=response.data.res[0].fir_ziro_racun;
-    this.adresa=response.data.res[0].fir_adresa;
-    this.opstina=response.data.res[0].ops_id;
-    this.grad=response.data.res[0].gra_id;
-    this.telefon=response.data.res[0].fir_telefon;
-    this.email=response.data.res[0].fir_mejl;
-    this.opstinaNaziv=response.data.res[0].ops_naziv;
-    this.gradNaziv=response.data.res[0].gra_naziv;
-
-                   });
-                   this.izmenaPodataka=true;
+    //   axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany",{
+    //                 params:{ sid: localStorage.getItem('sessionid')  }
+    //                }).then(response => {
+    // console.log(response.data.res[0]);
+    // this.imeFirme=response.data.res[0].fir_naziv;
+    // this.punNaziv=response.data.res[0].fir_pun_naziv;
+    // this.maticniBroj=response.data.res[0].fir_maticni_broj;
+    // this.pib=response.data.res[0].fir_pib;
+    // this.sifraDelatnosti=response.data.res[0].fir_sifra_delatnosti;
+    // this.opisDelatnosti=response.data.res[0].fir_opis_delatnosti;
+    // this.ziroRacun=response.data.res[0].fir_ziro_racun;
+    // this.adresa=response.data.res[0].fir_adresa;
+    // this.opstina=response.data.res[0].ops_id;
+    // this.grad=response.data.res[0].gra_id;
+    // this.telefon=response.data.res[0].fir_telefon;
+    // this.email=response.data.res[0].fir_mejl;
+    // this.opstinaNaziv=response.data.res[0].ops_naziv;
+    // this.gradNaziv=response.data.res[0].gra_naziv;
+    //
+    //                });
+    //                this.izmenaPodataka=true;
     },
     spisakOpstina(gradId) {
       axios.get("http://837s121.mars-e1.mars-hosting.com/getMunicipality", {
@@ -352,25 +349,22 @@ fd.append('opstina', this.opstina);
     dugmeIzmena(){
       this.izmenaPodataka=!this.izmenaPodataka;
       axios.get("http://837s121.mars-e1.mars-hosting.com/getCity")
-        .then(response => {
-          this.gradovi = response.data.gradovi;
-          console.log(this.gradovi);
+      .then(response => {
+        this.gradovi = response.data.gradovi;
+        console.log(this.gradovi);
+      });
 
-
-
+      setTimeout(()=>{
+        axios.get("http://837s121.mars-e1.mars-hosting.com/getMunicipality", {
+          params: {
+            gradId:this.gradId
+          }
+        }).then(response => {
+          this.opstine = response.data.opstine;
+          console.log(response.data);
         });
 
-        setTimeout(()=>{
-          axios.get("http://837s121.mars-e1.mars-hosting.com/getMunicipality", {
-            params: {
-              gradId:this.grad
-            }
-          }).then(response => {
-            this.opstine = response.data.opstine;
-            console.log(response.data);
-          });
-
-        },100)
+      },100)
     }
 
   }
