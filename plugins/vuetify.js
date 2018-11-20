@@ -22,7 +22,8 @@ import {
   VDivider,
   VRadioGroup,
   VChip,
-  VDataTable
+  VDataTable,
+  VTooltip
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -48,7 +49,8 @@ Vue.use(Vuetify, {
     VDivider,
     VRadioGroup,
     VChip,
-    VDataTable
+    VDataTable,
+    VTooltip
 
   },
   theme: {

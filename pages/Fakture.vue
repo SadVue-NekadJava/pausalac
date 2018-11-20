@@ -7,21 +7,21 @@
         <v-layout align-center justify-center  row wrap class="mb-1">
           <v-btn class="success mb-3 mt-0" @click="novafaktura=!novafaktura" v-if="novafaktura">Kreiraj novu Fakturu</v-btn>
         </v-layout>
-        <v-expansion-panel-content class=" listaFaktura" v-for="faktura in fakture" :key="faktura.id"  >
+        <v-expansion-panel-content class=" listaFaktura" v-for="(faktura,index) in fakture" :key="faktura.id"  >
           <div slot="header" >
 <v-layout  row wrap>
   <v-flex   xs5>
-
-
               <h2 :class="{'grey--text':faktura.fak_status==3}">{{faktura.kom_naziv}}</h2> <h3>{{faktura.date}}</h3>
             </v-flex>
             <v-flex  xs4>
-<div class="storno mr-5"  v-if="faktura.fak_status==3">
-  <h2 class=" text-xs-center">Stornirano</h2>
+<div class="mr-5"  >
+  <h2 v-if="faktura.fak_status==3" class="storno text-xs-center">Stornirano</h2>
+  <h2 v-if="faktura.fak_status==2" class="izrada text-xs-center">U izradi</h2>
+
 </div>
             </v-flex>
             <v-flex xs3>
-              <h2>{{faktura.fak_total|thousandSeparator}} RSD</h2>
+              <h2  :class="{'grey--text':faktura.fak_status==3}">{{faktura.fak_total|thousandSeparator}} RSD</h2>
             </v-flex>
           </v-layout>
           </div>
@@ -47,14 +47,46 @@
             <h2 class="pt-5 text-xs-center">Ukupna cena: {{faktura.fak_total|thousandSeparator}} RSD</h2>
             <v-layout row wrap >
               <v-flex xs7>
-                <h2 class="pt-5 text-xs-left">Mesto: {{faktura.fak_mestoPrometa}}, {{faktura.fak_datumPrometa}}</h2>
+                <h2 class="pt-5 text-xs-left">Mesto: {{faktura.grad}}, {{faktura.fak_datumPrometa}}</h2>
               </v-flex>
               <v-flex xs5>
                 <h2 class="pt-5 text-xs-right">Plativo do: {{faktura.fak_valuta}}</h2>
               </v-flex>
             </v-layout>
             <v-layout row wrap class="justify-center mb-1">
-              <v-btn v-if="faktura.fak_status!=3" color="error" @click="dugmeStoriniranjeFakture(faktura)">Storniraj</v-btn>
+              <v-tooltip bottom >
+              <v-btn   slot="activator" v-if="faktura.fak_status==1"  @click="dugmeStoriniranjeFakture(faktura) "icon><v-icon size="35px" color="primary">close</v-icon></v-btn>
+              Storniraj
+              </v-tooltip>
+                            <v-tooltip bottom >
+              <v-btn  slot="activator"  v-if="faktura.fak_status==1" icon><v-icon  size="35px" color="primary">print</v-icon></v-btn>
+Stampaj </v-tooltip>
+
+
+<v-tooltip bottom >
+              <v-btn
+              @click="izmeniFakturu(index)"
+              slot="activator"
+              v-if="faktura.fak_status==2"
+              large icon>
+              <v-icon size="35px" color="primary" >edit
+              </v-icon></v-btn>
+              Izmeni
+              </v-tooltip>
+<v-tooltip bottom >
+              <v-btn slot="activator" v-if="faktura.fak_status==2" large icon><v-icon size="35px" color="primary">delete</v-icon></v-btn>
+              Izbrisi
+              </v-tooltip>
+              <v-tooltip bottom >
+
+              <v-btn slot="activator" v-if="faktura.fak_status==2&&!faktura.isteklaValuta" large  @click="fakturisiDraft(faktura.fak_id)"icon><v-icon size="35px" color="primary">check</v-icon></v-btn>
+              Fakturisi
+              </v-tooltip>
+              <v-tooltip bottom >
+
+              <v-btn slot="activator" v-if="faktura.fak_status==2&&faktura.isteklaValuta" disabled large  @click="fakturisiDraft(faktura.fak_id)"icon><v-icon size="35px" color="primary">check</v-icon></v-btn>
+              Valuta je istekla
+              </v-tooltip>
             </v-layout>
             </v-card-text>
           </v-card>
@@ -71,13 +103,13 @@
   </v-layout>
   <v-layout row wrap>
     <v-flex xs12 class="fadeIn text-xs-center" v-if="!novafaktura">
-      <v-form class="forma pa-3">
+      <v-form v-model="valid" class="forma pa-3">
         <v-layout class="justify-end">
-          <v-icon @click="novafaktura=true" class="iks">clear</v-icon>
+          <v-icon @click="odustani" class="iks">clear</v-icon>
         </v-layout>
         <v-layout row wrap>
           <v-flex xs12>
-            <v-select :rules="obaveznoPoljeRules" @input="fakturaSelekt($event)" light class="pa-3" :items="komitenti" item-text="kom_naziv" item-value="kom_id" v-model="komitentId" label=" Komitent"></v-select>
+            <v-select :rules="obaveznoPoljeRules" light class="pa-3" :items="komitenti" item-text="kom_naziv" item-value="kom_id" v-model="komitentId" label=" Komitent"></v-select>
           </v-flex>
         </v-layout>
         <v-layout row wrap>
@@ -87,8 +119,8 @@
 
 
             <v-dialog ref="datumPrometa" v-model="modal" :return-value.sync="datumPrometa" persistent lazy full-width width="290px">
-              <v-text-field :rules="obaveznoPoljeRules" slot="activator" v-model="datumPrometa" label="Datum prometa" prepend-icon="event" readonly></v-text-field>
-              <v-date-picker v-model="datumPrometa" scrollable>
+                <v-text-field :rules="obaveznoPoljeRules" slot="activator" v-model="datumPrometa" label="Datum prometa" prepend-icon="event" readonly></v-text-field>
+              <v-date-picker v-model="datumPrometa" :min="danasnjiDatum" scrollable>
                 <v-spacer></v-spacer>
                 <v-btn flat color="primary" @click="modal=false">Cancel</v-btn>
                 <v-btn flat color="primary" @click="$refs.datumPrometa.save(datumPrometa)">OK</v-btn>
@@ -132,6 +164,15 @@
       </v-layout>
       <v-layout row wrap>
           <v-flex>
+            <div class="nevidljiviInput">
+
+
+            <v-text-field
+            :rules="obaveznoPoljeRules"
+              v-model="promenljiva"
+
+            ></v-text-field>
+              </div>
             <v-data-table
               :headers="headers"
               :items="proizvodi"
@@ -157,14 +198,14 @@
               </tr>
             </v-data-table>
             <v-card>
-              <v-card-text class="headline text-xs-right" v-if="ukupno!=0"><em>Ukupno:</em> {{ukupno|thousandSeparator}} (RSD)</v-card-text>
+              <v-card-text class="headline text-xs-center pt-3" v-if="ukupno!=0"><em>Ukupno:</em> {{ukupno|thousandSeparator}} (RSD)</v-card-text>
             </v-card>
           </v-flex>
     </v-layout>
 
         <v-text-field label="Opis" v-model="opisFakture"></v-text-field>
       <v-layout row wrap class="justify-center">
-          <v-btn color="success" :disabled="!valid" @click="posaljiFakturu(1)">Sacuvaj fakturu</v-btn>
+          <v-btn color="success" :disabled="!valid" @click="posaljiFakturu(1)">Fakturisi</v-btn>
           <v-btn color="primary" :disabled="!valid" @click="posaljiFakturu(2)">Sacuvaj radnu verziju</v-btn>
       </v-layout>
       </v-form>
@@ -183,10 +224,13 @@ export default {
   },
   data() {
     return {
+      idFakture:null,
+      danasnjiDatum:null,
+      promenljiva:'',
       date: null,
       datumPrometa: null,
       datumValute: null,
-      mesto: '',
+      mesto:'',
       menu: false,
       modal: false,
       modal1: false,
@@ -223,7 +267,7 @@ export default {
          v => !!v || 'Obavezno polje.'
       ],
       // KONTROLA ZA DUGMAD
-      valid: false,
+      valid: true,
       opisFakture: '',
       // BRISANJE/ARHIVIRANJE FAKTURE
       modal2: false,
@@ -232,10 +276,49 @@ export default {
 
   },
   methods:{
-    fakturaSelekt(faktura){
-
+    odustani(){
+      this.novafaktura=true;
+    this.komitentId='';
+    this.datumPrometa='';
+    this.datumValute='';
+    this.mesto='';
+      this.proizvodi=[];
+      this.promenljiva='';
+      this.ukupno=0;
     },
+izmeniFakturu(index){
+  this.novafaktura=false;
+this.komitentId=this.fakture[index].kom_id;
+this.datumPrometa=this.fakture[index].fak_datumPrometa;
+this.datumValute=this.fakture[index].fak_valuta;
+this.mesto=this.fakture[index].fak_mestoPrometa;
+this.idFakture=this.fakture[index].fak_id;
+this.promenljiva=1;
+
+for(var j=0; j<this.fakture[index].stavkeFakture.length;j++){
+  this.ukupno+=this.fakture[index].stavkeFakture[j].usp_cena*this.fakture[index].stavkeFakture[j].usp_kolicina;
+  this.proizvodi.push({
+    naziv:this.fakture[index].stavkeFakture[j].usp_naziv,
+    cena:this.fakture[index].stavkeFakture[j].usp_cena,
+    mera:this.fakture[index].stavkeFakture[j].usp_mera,
+    kolicina:this.fakture[index].stavkeFakture[j].usp_kolicina,
+    ukupnaCena:this.fakture[index].stavkeFakture[j].usp_cena*this.fakture[index].stavkeFakture[j].usp_kolicina
+
+
+  })
+}
+},
+
+fakturisiDraft(fakId){
+  axios.post("http://837s121.mars-e1.mars-hosting.com/postInvoice", {
+        sid: localStorage.getItem('sessionid'),
+        fakId
+    }).then(response => {});
+},
+
+
     dodajProizvod(){
+
       if(this.proizvodNazivUsluge==='' || this.proizvodJedinicaMere==='' || this.proizvodKolicina==='' || this.proizvodJedinicnaCena===''){
         alert('Morate popuniti sve podatke vezane za proizvod!');
       }
@@ -249,105 +332,116 @@ export default {
         }
         this.proizvodi.push(noviProizvod);
         // DODAJEM NA UKUPNU CENU FAKTURE
-        this.ukupno+=this.proizvodKolicina * this.proizvodJedinicnaCena
+        this.ukupno+=this.proizvodKolicina * this.proizvodJedinicnaCena;
+        this.promenljiva=this.proizvodi.length;
       }
     },
     ukloniStavku(stavka) {
         const zaBrisanje = this.proizvodi.indexOf(stavka)
         confirm('Da li ste sigurni?') && this.proizvodi.splice(zaBrisanje, 1)
         this.ukupno-=stavka.ukupnaCena;
+        if(this.proizvodi.length==0){
+          this.promenljiva='';
+        }
     },
     posaljiFakturu(statusFakture){
       // FAKTURA JE ZAVRSENA
-      if(statusFakture===1){
+      // if(statusFakture===1){
         // KONTROLA DA LI JE ODABRAN KOMITENT
-        if(this.komitentId===''){
-          alert('Niste odabrali komitenta.');
-        }
-        // KONTROLA DA LI JE ODABRAN DATUM PROMETA
-        else if(this.datumPrometa===null){
-          alert('Niste uneli datum prometa.');
-        }
-        // KONTROLA DA LI JE ODABRAN DATUM VALUTE
-        else if(this.datumValute===null){
-          alert('Niste uneli datum valute.');
-        }
-        // KONTROLA DA LI JE ODABRANO MESTO
-        else if(this.mesto===''){
-          alert('Niste odabrali mesto pisanja fakture.')
-        }
-        // KONTROLA DA LI POSTOJI BAR JEDAN PROIZVOD ILI USLUGA
-        else if(this.proizvodi.length===0){
-          alert('Morate uneti barem jedan proizvod ili uslugu.');
-        }
-        else{
-          // PROVERA DA LI DATUM PROMETA IDE PRE DATUMA VALUTE
+        // if(this.komitentId===''){
+        //   alert('Niste odabrali komitenta.');
+        // }
+        // // KONTROLA DA LI JE ODABRAN DATUM PROMETA
+        // else if(this.datumPrometa===null){
+        //   alert('Niste uneli datum prometa.');
+        // }
+        // // KONTROLA DA LI JE ODABRAN DATUM VALUTE
+        // else if(this.datumValute===null){
+        //   alert('Niste uneli datum valute.');
+        // }
+        // // KONTROLA DA LI JE ODABRANO MESTO
+        // else if(this.mesto===''){
+        //   alert('Niste odabrali mesto pisanja fakture.')
+        // }
+        // // KONTROLA DA LI POSTOJI BAR JEDAN PROIZVOD ILI USLUGA
+        // else if(this.proizvodi.length===0){
+        //   alert('Morate uneti barem jedan proizvod ili uslugu.');
+        // }
+        // else{
+           // PROVERA DA LI DATUM PROMETA IDE PRE DATUMA VALUTE
           if(new Date(this.datumPrometa)>=new Date(this.datumValute)){
             alert('Datum valute ne moze biti pre datuma prometa.')
           }
-          // SVE KONTROLE SU USPESNE
-          else{
-            axios.post("http://837s121.mars-e1.mars-hosting.com/postInvoice", {
-                  sid: localStorage.getItem('sessionid'),
-                  valuta: this.datumValute,
-                  datumPrometa: this.datumPrometa,
-                  mestoPrometa: this.mesto,
-                  total: this.ukupno,
-                  statusFakture: statusFakture,
-                  uputstva: this.opisFakture,
-                  komId: this.komitentId,
-                  stavkeFakture: this.proizvodi
-              })
-              .then(response => {
-              if(response.data.status){
-                alert('Uspesno ste uneli fakturu. Broj fatkure: '+response.data.brojFakture);
+        // SVE KONTROLE SU USPESNE
+           else{
+            if(statusFakture===1){
+              axios.post("http://837s121.mars-e1.mars-hosting.com/postInvoice", {
+                    sid: localStorage.getItem('sessionid'),
+                    valuta: this.datumValute,
+                    datumPrometa: this.datumPrometa,
+                    mestoPrometa: this.mesto,
+                    total: this.ukupno,
+                    statusFakture: statusFakture,
+                    uputstva: this.opisFakture,
+                    komId: this.komitentId,
+                    stavkeFakture: this.proizvodi,
+                    fakId:this.idFakture
+                })
+                .then(response => {
+                if(response.data.status){
+                  alert('Uspesno ste uneli fakturu. Broj fatkure: '+response.data.brojFakture);
+                }
+                else{
+                  alert('Doslo je do greske, faktura nije uneta.');
+                }
+                });
               }
               else{
-                alert('Doslo je do greske, faktura nije uneta.');
-              }
-              });
-          }
-        }
-      }
+              // CUVAM FAKTURU KAO NACRT
+                  axios.post("http://837s121.mars-e1.mars-hosting.com/postTemplate", {
+                      sid: localStorage.getItem('sessionid'),
+                      valuta: this.datumValute,
+                      datumPrometa: this.datumPrometa,
+                      mestoPrometa: this.mesto,
+                      total: this.ukupno,
+                      statusFakture: statusFakture,
+                      uputstva: this.opisFakture,
+                      komId: this.komitentId,
+                      stavkeFakture: this.proizvodi,
+                      fakId:this.idFakture
+                    })
+                    .then(response => {
+                      console.log(response.data);
+                    });
+                  }
+      //   }
+      // }
       // FAKTURA SE CUVA KAO NACRT
-      else{
-
-        // PROVERA DA LI SU DATUMI UNESENI
-        if(this.datumPrometa!==null && this.datumValute!==null){
-          // PROVERA DA LI DATUM PROMETA IDE PRE DATUMA VALUTE
-          if(new Date(this.datumPrometa)>new Date(this.datumValute)){
-            alert('Datum valute ne moze biti pre datuma prometa!');
-            // ZUSTAVLJAM FUNKCIJU
-            return false;
-          }
-        }
-        if(this.komitentId==='' && this.mesto===''){
-          alert('Morate odabrati komitenta i mesto prometa!');
-        }
-        else if(this.komitentId===''){
-          alert('Morate odabrati komitenta!');
-        }
-        else if(this.mesto===''){
-          alert('Morate odabrati mesto prometa!');
-        }
-        else{
-          // CUVAM FAKTURU KAO NACRT
-          axios.post("http://837s121.mars-e1.mars-hosting.com/postTemplate", {
-              sid: localStorage.getItem('sessionid'),
-              valuta: this.datumValute,
-              datumPrometa: this.datumPrometa,
-              mestoPrometa: this.mesto,
-              total: this.ukupno,
-              statusFakture: statusFakture,
-              uputstva: this.opisFakture,
-              komId: this.komitentId,
-              stavkeFakture: this.proizvodi
-            })
-            .then(response => {
-              console.log(response.data);
-            });
-        }
-      }
+        // else{
+        //
+        //   // PROVERA DA LI SU DATUMI UNESENI
+        //   if(this.datumPrometa!==null && this.datumValute!==null){
+        //     // PROVERA DA LI DATUM PROMETA IDE PRE DATUMA VALUTE
+        //     if(new Date(this.datumPrometa)>new Date(this.datumValute)){
+        //       alert('Datum valute ne moze biti pre datuma prometa!');
+        //       // ZUSTAVLJAM FUNKCIJU
+        //       return false;
+        //     }
+        //   }
+        //   if(this.komitentId==='' && this.mesto===''){
+        //     alert('Morate odabrati komitenta i mesto prometa!');
+        //   }
+        //   else if(this.komitentId===''){
+        //     alert('Morate odabrati komitenta!');
+        //   }
+        //   else if(this.mesto===''){
+        //     alert('Morate odabrati mesto prometa!');
+        //   }
+        //   else{
+        //
+        //   }
+        // }
+}
     },
     dugmeStoriniranjeFakture(faktura){
       this.odabranaFaktura=faktura;
@@ -368,6 +462,10 @@ export default {
     }
   },
   mounted() {
+    this.danasnjiDatum=new Date().toISOString().split('T')[0]
+
+    this.datumPrometa=new Date().toISOString().split('T')[0]
+    console.log(this.danasnjiDatum);
     axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
       params: {
         sid: localStorage.getItem('sessionid')
@@ -389,48 +487,47 @@ export default {
       console.log(response.data);
       // MENJAM FORMAT DATUMA GDE POSTOJI I KONTROLISEM DA LI POSTOJI BROJ FAKTURE
       for (var faktura of response.data.fakture){
-        // DA LI POSTOJI DATUM IZDAVANJA?
-        if(faktura.fak_datumIzdavanja!==null){
+            faktura.isteklaValuta=false;
+        if(faktura.fak_status==2){
+        if(new Date()>=new Date(faktura.fak_valuta)){
+            faktura.isteklaValuta=true;
+
+        }
+      }
+      else{
           // RASTAVLJAM DATUM NA OSNOVU MINUSA
           faktura.fak_datumIzdavanja=faktura.fak_datumIzdavanja.split('-');
           // ISPISUJEM DATUM U FORMATU KOJI ZELIM PREKO TRENUTNOG PRIKAZA
           faktura.fak_datumIzdavanja=faktura.fak_datumIzdavanja[2]+'.'+faktura.fak_datumIzdavanja[1]+'.'+faktura.fak_datumIzdavanja[0]+'.';
-        }
-        else{
-          faktura.fak_datumIzdavanja='Datum izdavanja nije naveden.'
-        }
-        // DA LI POSTOJI DATUM PROMETA?
-        if(faktura.fak_datumPrometa!==null){
-          // RASTAVLJAM DATUM NA OSNOVU MINUSA
-          faktura.fak_datumPrometa=faktura.fak_datumPrometa.split('-');
+        }    // RASTAVLJAM DATUM NA OSNOVU MINUSA
+          faktura.fak_datumPrometaIspis=faktura.fak_datumPrometa.split('-');
           // ISPISUJEM DATUM U FORMATU KOJI ZELIM PREKO TRENUTNOG PRIKAZA
-          faktura.fak_datumPrometa=faktura.fak_datumPrometa[2]+'.'+faktura.fak_datumPrometa[1]+'.'+faktura.fak_datumPrometa[0]+'.';
-        }
-        else{
-          faktura.fak_datumPrometa='Datum prometa nije naveden.'
-        }
-        // DA LI POSTOJI DATUM VALUTE?
-        if(faktura.fak_valuta!==null){
+          faktura.fak_datumPrometaIspis=faktura.fak_datumPrometa[2]+'.'+faktura.fak_datumPrometa[1]+'.'+faktura.fak_datumPrometa[0]+'.';
           // RASTAVLJAM DATUM NA OSNOVU MINUSA
-          faktura.fak_valuta=faktura.fak_valuta.split('-');
+          faktura.fak_valutaIspis=faktura.fak_valuta.split('-');
           // ISPISUJEM DATUM U FORMATU KOJI ZELIM PREKO TRENUTNOG PRIKAZA
-          faktura.fak_valuta=faktura.fak_valuta[2]+'.'+faktura.fak_valuta[1]+'.'+faktura.fak_valuta[0]+'.';
-        }
-        else{
-          faktura.fak_valuta='Datum valute nije naveden.'
-        }
+          faktura.fak_valutaIspis=faktura.fak_valuta[2]+'.'+faktura.fak_valuta[1]+'.'+faktura.fak_valuta[0]+'.';
         // DA LI POSTOJI BROJ FAKTURE?
         if(faktura.fak_brojFakture===null){
           faktura.fak_brojFakture='Samo izdate fakture mogu imati broj.'
         }
       }
       this.fakture=response.data.fakture;
+      console.log(this.fakture);
+      function sortFunction(a,b){
+          var dateA = new Date(a.fak_datumPrometa).getTime();
+          var dateB = new Date(b.fak_datumPrometa).getTime();
+          return dateA > dateB ? 1 : -1;
+      };
+      this.fakture.sort(sortFunction)
     });
   },
-
 }
 </script>
 <style scoped>
+.nevidljiviInput{
+  display:none;
+}
 /* .listaFaktura{
   opacity:0.6;
 } */
@@ -439,6 +536,13 @@ color:#f10000 ;
 border:3px ridge #f10000 ;
 border-radius: 4px;
 min-height: 30px;
+
+}
+.izrada{
+  color:#2980b9 ;
+  border:3px ridge #2980b9 ;
+  border-radius: 4px;
+  min-height: 30px;
 
 }
 .klasa{
