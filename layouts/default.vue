@@ -112,7 +112,7 @@
 
 <script>
 
-  export default {  
+  export default {
     data () {
       return {
         logged:this.$store.state.logged,
@@ -123,7 +123,7 @@
           { icon: 'description', title: 'Fakture', to: '/Fakture' },
           { icon: 'folder_special', title: 'Porez', to: '/Porez' },
             { icon: 'account_box', title: 'Komitenti', to: '/Komitenti' },
-                    { icon: 'local_hospital', title: 'Zdravstvene knjizice', to: '/ZKnjizice' }
+                    // { icon: 'local_hospital', title: 'Zdravstvene knjizice', to: '/ZKnjizice' }
                             // { icon: 'business', title: 'Moja Firma', to: '/MojaFirma' },
         ],
         miniVariant: false,

@@ -8,7 +8,7 @@
 
 <v-layout class="justify-center" >
 
-  <v-flex  xs4>
+  <v-flex  sm4>
 <v-toolbar>
   <v-toolbar-title>
     <v-icon large class="primary grey--text text--lighten-4">local_hospital</v-icon></v-toolbar-title>
@@ -66,7 +66,7 @@
 
                <div >
               <h2>Mite Balije 12, Beograd</h2>
-              <h5 ><em>(Adresa, opstina, mesto)</em></h5>
+              <h5 ><em>(Adresa, mesto)</em></h5>
 
                </div>
 
