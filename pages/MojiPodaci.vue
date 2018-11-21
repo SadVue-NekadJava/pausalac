@@ -92,7 +92,7 @@ v-model="imeRoditelja"
   <h3 v-if="izmenaPodataka" class="podaci">{{strucnaSprema}}</h3>
   <v-text-field v-else
     class="podaciIzmena pa-0"
-  v-model="ziroRacun"
+  v-model="strucnaSprema"
     :rules="obaveznoPoljeRules"
   ></v-text-field>
 </v-flex>
@@ -104,12 +104,15 @@ v-model="imeRoditelja"
 <v-flex class="pa-4" hidden-sm-and-up xs5>
 </v-flex>
 <v-flex xs5>
-  <h3 v-if="izmenaPodataka" class="podaci">{{uRadnomOdnosu}}</h3>
-  <v-text-field v-else
-    class="podaciIzmena pa-0"
-    :rules="obaveznoPoljeRules"
+  <h3 v-if="izmenaPodataka" class="podaci">{{uRadnomOdnosuNiz[uRadnomOdnosu].uRadnomOdnosuTekst}}</h3>
+  <v-select v-if="!izmenaPodataka"
+    :items="uRadnomOdnosuNiz"
     v-model="uRadnomOdnosu"
-  ></v-text-field>
+      item-text="uRadnomOdnosuTekst"
+        item-value="uRadnomOdnosuVrednost"
+  :rules="obaveznoPoljeRules"
+
+  ></v-select>
 </v-flex>
     </v-layout>
     <v-layout class="pt-4" row wrap>
@@ -119,12 +122,15 @@ v-model="imeRoditelja"
   <v-flex class="pa-4" hidden-sm-and-up xs5>
   </v-flex>
   <v-flex xs5>
-  <h3 v-if="izmenaPodataka" class="podaci">{{pol}}</h3>
-  <v-text-field v-else
-  :rules="obaveznoPoljeRules"
-    class="podaciIzmena pa-0"
-  v-model="pol"
-  ></v-text-field>
+    <h3 v-if="izmenaPodataka" class="podaci">{{polNiz[pol].polNizTekst}}</h3>
+    <v-select v-if="!izmenaPodataka"
+      :items="polNiz"
+      v-model="pol"
+        item-text="polNizTekst"
+          item-value="polNizVrednost"
+    :rules="obaveznoPoljeRules"
+
+    ></v-select>
   </v-flex>
     </v-layout>
 <h3 class="pt-5 pb-1 blue-grey--text"><em>Kontakt podaci</em></h3>
@@ -193,8 +199,28 @@ export default {
       imeRoditelja:'',
       jmbg: '',
       strucnaSprema: '',
-      uRadnomOdnosu: '',
-      pol: '',
+      uRadnomOdnosu: 0,
+      uRadnomOdnosuNiz: [
+        {
+          uRadnomOdnosuVrednost: 0,
+          uRadnomOdnosuTekst: 'Ne'
+        },
+        {
+          uRadnomOdnosuVrednost: 1,
+          uRadnomOdnosuTekst: 'Da'
+        }
+      ],
+      pol: 0,
+      polNiz: [
+        {
+          polNizVrednost: 0,
+          polNizTekst: 'zenski'
+        },
+        {
+          polNizVrednost: 1,
+          polNizTekst: 'muski'
+        }
+      ],
       adresa: '',
       opstina:'',
       opstinaId:'',
@@ -205,8 +231,8 @@ export default {
       // NIZOVI ZA SELEKT
       gradovi:'',
       opstine:'',
-      // NESTO(?)
-      valid:true,
+      // KONTROLOR ZA FORMU - POPUNJENA POLJA
+      valid:false,
       // STARE PROMENLJIVE
       image:'',
       logo:'',
@@ -246,11 +272,11 @@ export default {
       this.imeRoditelja=podaci.kpd_imeRoditelja;
       this.jmbg=podaci.kpd_jmbg;
       this.strucnaSprema=podaci.kpd_strucnaSprema;
-      this.uRadnomOdnosu=podaci.kpd_uRadnomOdnosu;
-      this.pol=podaci.kpd_pol;
+      this.uRadnomOdnosu=Number(podaci.kpd_uRadnomOdnosu);
+      this.pol=Number(podaci.kpd_pol);
       this.adresa=podaci.kpd_adresa;
       this.opstina=podaci.opstina;
-      this.opsticnaId=podaci.ops_id;
+      this.opstinaId=podaci.ops_id;
       this.grad=podaci.grad;
       this.gradId=podaci.gradId;
     });
