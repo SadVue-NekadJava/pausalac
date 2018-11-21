@@ -47,10 +47,10 @@
             <h2 class="pt-5 text-xs-center">Ukupna cena: {{faktura.fak_total|thousandSeparator}} RSD</h2>
             <v-layout row wrap >
               <v-flex xs7>
-                <h2 class="pt-5 text-xs-left">Mesto: {{faktura.grad}}, {{faktura.fak_datumPrometa}}</h2>
+                <h2 class="pt-5 text-xs-left">Mesto: {{faktura.grad}}, {{faktura.fak_datumPrometaIspis}}</h2>
               </v-flex>
               <v-flex xs5>
-                <h2 class="pt-5 text-xs-right">Plativo do: {{faktura.fak_valuta}}</h2>
+                <h2 class="pt-5 text-xs-right">Plativo do: {{faktura.fak_valutaIspis}}</h2>
               </v-flex>
             </v-layout>
             <v-layout row wrap class="justify-center mb-1">
@@ -502,11 +502,11 @@ fakturisiDraft(fakId){
         }    // RASTAVLJAM DATUM NA OSNOVU MINUSA
           faktura.fak_datumPrometaIspis=faktura.fak_datumPrometa.split('-');
           // ISPISUJEM DATUM U FORMATU KOJI ZELIM PREKO TRENUTNOG PRIKAZA
-          faktura.fak_datumPrometaIspis=faktura.fak_datumPrometa[2]+'.'+faktura.fak_datumPrometa[1]+'.'+faktura.fak_datumPrometa[0]+'.';
+          faktura.fak_datumPrometaIspis=faktura.fak_datumPrometaIspis[2]+'.'+faktura.fak_datumPrometaIspis[1]+'.'+faktura.fak_datumPrometaIspis[0]+'.';
           // RASTAVLJAM DATUM NA OSNOVU MINUSA
           faktura.fak_valutaIspis=faktura.fak_valuta.split('-');
           // ISPISUJEM DATUM U FORMATU KOJI ZELIM PREKO TRENUTNOG PRIKAZA
-          faktura.fak_valutaIspis=faktura.fak_valuta[2]+'.'+faktura.fak_valuta[1]+'.'+faktura.fak_valuta[0]+'.';
+          faktura.fak_valutaIspis=faktura.fak_valutaIspis[2]+'.'+faktura.fak_valutaIspis[1]+'.'+faktura.fak_valutaIspis[0]+'.';
         // DA LI POSTOJI BROJ FAKTURE?
         if(faktura.fak_brojFakture===null){
           faktura.fak_brojFakture='Samo izdate fakture mogu imati broj.'
