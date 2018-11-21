@@ -46,7 +46,7 @@
             <div class=" ml-2 uplatnica">
               <p class="poljeUnosa">{{punNaziv}}, {{adresa}}, {{opstinaNaziv}}, {{gradNaziv}}</p>
             </div>
-            <p class="textLabel mt-2 ml-3">Svrha isplate</p>
+            <p class="textLabel mt-2 ml-3">Svrha placanja</p>
             <div class="ml-2 uplatnica">
               <p class="poljeUnosa">{{svrhaIsplateIzabrana.poruka}}</p>
             </div>
