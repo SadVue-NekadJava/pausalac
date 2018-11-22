@@ -37,7 +37,6 @@ export default {
         hash: this.hash
       },
     }).then(response => {
-      console.log(response);
       this.msg = response.data.msg;
 
     });

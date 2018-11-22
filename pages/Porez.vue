@@ -230,7 +230,6 @@ sacuvajIzmeneNaloga(){
         sid: localStorage.getItem('sessionid')
       }
     }).then(response => {
-      console.log(response.data.res);
 
       for(var i=0;i<response.data.res.length; i++){
           this.svrhaIsplate[i].iznos=response.data.res[i].por_cifra;
@@ -249,7 +248,6 @@ sacuvajIzmeneNaloga(){
         sid: localStorage.getItem('sessionid')
       }
     }).then(response => {
-      console.log(response.data.res[0]);
 
       this.punNaziv = response.data.res[0].fir_pun_naziv;
       this.ziroRacun = response.data.res[0].fir_ziro_racun;

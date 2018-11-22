@@ -3,32 +3,32 @@
   <v-flex xs6 offset-xs2>
 
 
-  <div v-if="idKomitentaZaBrisanje!=0" class="text-xs-center  modal pa-5">
-<h1>Da li ste sigurni da zelite da obrisete komitenta "{{komitentZaBrisanje}}"?</h1>
-<v-btn @click="brisanjeKomitentaPotvrdjeno" color="success">Da</v-btn>
-<v-btn @click="idKomitentaZaBrisanje=0" color="secondary">Ne</v-btn>
-  </div>
-  <div v-if="statusIzbrisanog" class="text-xs-center  modal pa-5">
-<h1>
-    Uspesno ste izbrisali komitenta "{{komitentZaBrisanje}}"
-</h1>
-  <v-btn @click="uspesnoBrisanje" color="primary">Ok</v-btn>
-  </div>
+    <div v-if="idKomitentaZaBrisanje!=0" class="text-xs-center  modal pa-5">
+      <h1>Da li ste sigurni da zelite da obrisete komitenta "{{komitentZaBrisanje}}"?</h1>
+      <v-btn @click="brisanjeKomitentaPotvrdjeno" color="success">Da</v-btn>
+      <v-btn @click="idKomitentaZaBrisanje=0" color="secondary">Ne</v-btn>
+    </div>
+    <div v-if="statusIzbrisanog" class="text-xs-center  modal pa-5">
+      <h1>
+        Uspesno ste izbrisali komitenta "{{komitentZaBrisanje}}"
+      </h1>
+      <v-btn @click="uspesnoBrisanje" color="primary">Ok</v-btn>
+    </div>
   </v-flex>
   <transition name="animacijaForme">
     <v-flex xs12 sm6 offset-sm3 class="forma text-xs-center" v-if="kreirajNovog">
-<v-layout row wrap>
+      <v-layout row wrap>
 
 
 
-<v-flex xs10>
+        <v-flex xs10>
 
-</v-flex>
+        </v-flex>
 
-<v-flex xs2>
-  <v-icon @click="kreirajNovog=false" class="iks pt-3">clear</v-icon>
-</v-flex>
-</v-layout>
+        <v-flex xs2>
+          <v-icon @click="kreirajNovog=false" class="iks pt-3">clear</v-icon>
+        </v-flex>
+      </v-layout>
       <v-form v-if="kreirajNovog" ref="form" v-model="valid" class=" pt-2 pb-5 pr-5 pl-5">
         <v-text-field v-model="komImeFirme" :rules="obaveznoPoljeRules" label="Ime Firme"></v-text-field>
         <v-text-field v-model="komPunNaziv" :rules="obaveznoPoljeRules" label="Pun naziv sa resenja"></v-text-field>
@@ -38,7 +38,7 @@
         <v-select :items="komOpstine" :rules="obaveznoPoljeRules" name="opstina" item-text="ops_naziv" item-value="ops_id" v-model="komOpstina" label="Izaberite opstinu"></v-select>
         <v-text-field v-model="komAdresa" :rules="obaveznoPoljeRules" label="Adresa"></v-text-field>
         <v-text-field v-model="komEmail" label="E-mail"></v-text-field>
-        <v-text-field v-model="komTelefon" mask="+(###)##-###-######"  label="Telefon"></v-text-field>
+        <v-text-field v-model="komTelefon" mask="+(###)##-###-######" label="Telefon"></v-text-field>
 
         <v-btn :disabled="!valid" color="success" @click="sacuvajNovogKomitenta">
           Sacuvaj
@@ -50,14 +50,14 @@
   </transition>
   <transition name="animacijaListe">
     <v-flex xs12 md6 offset-md3 v-if="!kreirajNovog" class="forma">
-<v-layout align-center justify-center row wrap>
+      <v-layout align-center justify-center row wrap>
 
 
 
-  <v-btn @click="kreiranjeNovog" v-if="!kreirajNovog" color="success" class="mb-4 mt-4">Dodaj novog komitenta</v-btn>
+        <v-btn @click="kreiranjeNovog" v-if="!kreirajNovog" color="success" class="mb-4 mt-4">Dodaj novog komitenta</v-btn>
 
 
-</v-layout>
+      </v-layout>
 
 
       <h1 class="ml-5">Spisak Komitenata</h1>
@@ -91,10 +91,10 @@
 export default {
   data() {
     return {
-      komitentIdIzmena:0,
-      statusIzbrisanog:false,
-      idKomitentaZaBrisanje:0,
-      komitentZaBrisanje:'',
+      komitentIdIzmena: 0,
+      statusIzbrisanog: false,
+      idKomitentaZaBrisanje: 0,
+      komitentZaBrisanje: '',
       komitenti: [],
       valid: true,
       kreirajNovog: false,
@@ -120,151 +120,136 @@ export default {
     }
   },
   mounted() {
-    axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
-      params: {
-        sid: localStorage.getItem('sessionid')
-      }
-    }).then(response => {
-      this.komitenti = response.data.komitenti;
-      // for(var i=0;i<this.komitenti.length;i++){
-      //   if(this.komitenti[i].kom_telefon!=null){
-      //     var string=this.komitenti[i].kom_telefon;
-      //     this.komitenti[i].kom_telefon='+('+string.slice(0,3)+')'+string.slice(3,5)+'-'+string.slice(5,8)+'-'+string.slice(9)
-        // }
-      // }
-      console.log(this.komitenti);
-
-
-    });
+      this.preuzmiKomitente();
     axios.get("http://837s121.mars-e1.mars-hosting.com/getCity")
       .then(response => {
         this.gradovi = response.data.gradovi;
-        console.log(this.gradovi);
 
 
 
       });
   },
   methods: {
-izmeniKomitenta(komId){
-  this.komitentIdIzmena=komId;
-  axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
-    params: {
-      sid: localStorage.getItem('sessionid'),
-      komId
-    }
-  }).then(response => {
-  console.log(response.data.komitent);
-  this.komImeFirme=response.data.komitent[0].kom_naziv ,
-  this.komPunNaziv=response.data.komitent[0].kom_punNaziv,
-  this.komPib=response.data.komitent[0].kom_pib ,
-  this.komRacun=response.data.komitent[0].kom_ziroRacun ,
-  this.komGrad=response.data.komitent[0].gra_id ,
-  this.komOpstina=response.data.komitent[0].ops_id ,
-  this.komAdresa=response.data.komitent[0].kom_adresa ,
-  this.komEmail=response.data.komitent[0].kom_mejl ,
-  this.komTelefon=response.data.komitent[0].kom_telefon
 
-
-});
-setTimeout(()=>{
-  axios.get("http://837s121.mars-e1.mars-hosting.com/getMunicipality", {
-    params: {
-      gradId:this.komGrad
-    }
-  }).then(response => {
-    this.komOpstine = response.data.opstine;
-    console.log(response.data);
-  });
-  this.kreirajNovog=true;
-},100)
-
-},
-
-uspesnoBrisanje(){
-
-  this.idKomitentaZaBrisanje=0;
-  this.statusIzbrisanog= false;
-
-  axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
-    params: {
-      sid: localStorage.getItem('sessionid')
-    }
-  }).then(response => {
-    this.komitenti = response.data.komitenti;
-    console.log(this.komitenti);
-
-
-  });
-},
-
-    brisanjeKomitentaPotvrdjeno(){
-      axios.patch("http://837s121.mars-e1.mars-hosting.com/deleteComittent", {
-        // params: {
-          sid: localStorage.getItem('sessionid'),
-          komId:this.idKomitentaZaBrisanje
-        // }
+    preuzmiKomitente(){
+      axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
+        params: {
+          sid: localStorage.getItem('sessionid')
+        }
       }).then(response => {
-        this.statusIzbrisanog=response.data.status;
-        this.idKomitentaZaBrisanje=0;
+        this.komitenti = response.data.komitenti;
+
+
+
+      });
+
+    },
+
+    izmeniKomitenta(komId) {
+      this.komitentIdIzmena = komId;
+      axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
+        params: {
+          sid: localStorage.getItem('sessionid'),
+          komId
+        }
+      }).then(response => {
+        this.komImeFirme = response.data.komitent[0].kom_naziv,
+          this.komPunNaziv = response.data.komitent[0].kom_punNaziv,
+          this.komPib = response.data.komitent[0].kom_pib,
+          this.komRacun = response.data.komitent[0].kom_ziroRacun,
+          this.komGrad = response.data.komitent[0].gra_id,
+          this.komOpstina = response.data.komitent[0].ops_id,
+          this.komAdresa = response.data.komitent[0].kom_adresa,
+          this.komEmail = response.data.komitent[0].kom_mejl,
+          this.komTelefon = response.data.komitent[0].kom_telefon
+
+
+      });
+      setTimeout(() => {
+        axios.get("http://837s121.mars-e1.mars-hosting.com/getMunicipality", {
+          params: {
+            gradId: this.komGrad
+          }
+        }).then(response => {
+          this.komOpstine = response.data.opstine;
+        });
+        this.kreirajNovog = true;
+      }, 100)
+
+    },
+
+    uspesnoBrisanje() {
+
+      this.idKomitentaZaBrisanje = 0;
+      this.statusIzbrisanog = false;
+
+      axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
+        params: {
+          sid: localStorage.getItem('sessionid')
+        }
+      }).then(response => {
+        this.komitenti = response.data.komitenti;
+
+
       });
     },
-    brisanjeKomitenta(id,naziv){
-        this.komitentZaBrisanje=naziv;
-        this.idKomitentaZaBrisanje=id;
+
+    brisanjeKomitentaPotvrdjeno() {
+      axios.patch("http://837s121.mars-e1.mars-hosting.com/deleteComittent", {
+        // params: {
+        sid: localStorage.getItem('sessionid'),
+        komId: this.idKomitentaZaBrisanje
+        // }
+      }).then(response => {
+        this.statusIzbrisanog = response.data.status;
+        this.idKomitentaZaBrisanje = 0;
+      });
+    },
+    brisanjeKomitenta(id, naziv) {
+      this.komitentZaBrisanje = naziv;
+      this.idKomitentaZaBrisanje = id;
 
 
     },
     sacuvajNovogKomitenta() {
       axios.post("http://837s121.mars-e1.mars-hosting.com/addNewComittent", {
 
-            sid: localStorage.getItem('sessionid'),
-            naziv: this.komImeFirme,
-            punNaziv: this.komPunNaziv,
-            pib: this.komPib,
-            ziroRacun: this.komRacun,
-            adresaFirme: this.komAdresa,
-            telefon: this.komTelefon,
-            mejlFirme: this.komEmail,
-            opstinaFirme:this.komOpstina
-
+          sid: localStorage.getItem('sessionid'),
+          naziv: this.komImeFirme,
+          punNaziv: this.komPunNaziv,
+          pib: this.komPib,
+          ziroRacun: this.komRacun,
+          adresaFirme: this.komAdresa,
+          telefon: this.komTelefon,
+          mejlFirme: this.komEmail,
+          opstinaFirme: this.komOpstina
         })
         .then(response => {
-        console.log(response.data);
-
-
-
         });
+      axios.patch("http://837s121.mars-e1.mars-hosting.com/deleteComittent", {
+        // params: {
+        sid: localStorage.getItem('sessionid'),
+        komId: this.komitentIdIzmena
+        // }
+      }).then(response => {
+        this.komitentIdIzmena = 0;
+        this.idKomitentaZaBrisanje = 0;
 
-
-        axios.patch("http://837s121.mars-e1.mars-hosting.com/deleteComittent", {
-          // params: {
-            sid: localStorage.getItem('sessionid'),
-            komId:this.komitentIdIzmena
-          // }
-        }).then(response => {
-          this.komitentIdIzmena=0;
-          this.idKomitentaZaBrisanje=0;
-        });
-        location.reload();
+          this.preuzmiKomitente();
+      });
+  this.kreirajNovog=false;
     },
     kreiranjeNovog() {
       this.kreirajNovog = !this.kreirajNovog;
-      this.komImeFirme= '',
-      this.komPunNaziv= '',
-      this.komPib= '',
-      this.komRacun= '',
-      this.komGrad= '',
-      this.komOpstina= '',
-      this.komAdresa= '',
-      this.komEmail= '',
-      this.komTelefon= ''
-
-
-
-
-
-
+      this.komImeFirme = '',
+        this.komPunNaziv = '',
+        this.komPib = '',
+        this.komRacun = '',
+        this.komGrad = '',
+        this.komOpstina = '',
+        this.komAdresa = '',
+        this.komEmail = '',
+        this.komTelefon = ''
 
     },
     spisakOpstina(gradId) {
@@ -274,36 +259,36 @@ uspesnoBrisanje(){
         }
       }).then(response => {
         this.komOpstine = response.data.opstine;
+        this.komOpstina = response.data.opstine[0].ops_id;
       });
     },
   }
-
-
-
 }
 </script>
 
 <style>
-.iks{
-  cursor:pointer;
+.iks {
+  cursor: pointer;
+}
 
+.iks:hover {
+  transform: scale(1.4);
 }
-.iks:hover{
-  transform:scale(1.4);
-}
-.modal{
-  position:absolute;
-  width:50%;
+
+.modal {
+  position: absolute;
+  width: 50%;
   z-index: 100;
-  opacity:1;
-  top:30%;
+  opacity: 1;
+  top: 30%;
   border-radius: 10px;
-  background-color:white;
-  -webkit-box-shadow: 0px 2px 241px -3px rgba(0,0,0,1);
-  -moz-box-shadow: 0px 2px 241px -3px rgba(0,0,0,1);
-  box-shadow: 0px 2px 241px -3px rgba(0,0,0,1);
-  position:fixed;
+  background-color: white;
+  -webkit-box-shadow: 0px 2px 241px -3px rgba(0, 0, 0, 1);
+  -moz-box-shadow: 0px 2px 241px -3px rgba(0, 0, 0, 1);
+  box-shadow: 0px 2px 241px -3px rgba(0, 0, 0, 1);
+  position: fixed;
 }
+
 .animacijaForme-enter {
   opacity: 0;
 }

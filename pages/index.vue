@@ -260,7 +260,6 @@ export default {
     axios.get("http://837s121.mars-e1.mars-hosting.com/getCity")
       .then(response => {
         this.gradovi = response.data.gradovi;
-        console.log(this.gradovi);
 
 
 
@@ -302,6 +301,7 @@ export default {
         }
       }).then(response => {
         this.opstineFirma = response.data.opstine;
+        this.opstina=response.data.opstine[0].ops_id;
       });
     },
     spisakOpstinaKorisnik(gradId) {
@@ -311,6 +311,7 @@ export default {
         }
       }).then(response => {
         this.opstine = response.data.opstine;
+        this.korOpstina=response.data.opstine[0].ops_id;
       });
     },
     korak2() {

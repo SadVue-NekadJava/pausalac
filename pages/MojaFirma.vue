@@ -267,7 +267,6 @@ export default {
     axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany",{
                   params:{ sid: localStorage.getItem('sessionid')  }
                  }).then(response => {
-console.log(response.data.res[0]);
 this.imeFirme=response.data.res[0].fir_naziv;
 this.punNaziv=response.data.res[0].fir_pun_naziv;
 this.maticniBroj=response.data.res[0].fir_maticni_broj;
@@ -346,7 +345,6 @@ fd.append('opstina', this.opstina);
     }
   })
   .catch(function (error) {
-    console.log(error);
   });
   this.izmenaPodataka=true;
 },
@@ -355,7 +353,6 @@ fd.append('opstina', this.opstina);
       axios.get("http://837s121.mars-e1.mars-hosting.com/getCompany",{
                     params:{ sid: localStorage.getItem('sessionid')  }
                    }).then(response => {
-    console.log(response.data.res[0]);
     this.imeFirme=response.data.res[0].fir_naziv;
     this.punNaziv=response.data.res[0].fir_pun_naziv;
     this.maticniBroj=response.data.res[0].fir_maticni_broj;
@@ -381,6 +378,7 @@ fd.append('opstina', this.opstina);
         }
       }).then(response => {
         this.opstine = response.data.opstine;
+        this.opstina=response.data.opstine[0].ops_id;
       });
     },
     dugmeIzmena(){
@@ -388,7 +386,6 @@ fd.append('opstina', this.opstina);
       axios.get("http://837s121.mars-e1.mars-hosting.com/getCity")
         .then(response => {
           this.gradovi = response.data.gradovi;
-          console.log(this.gradovi);
 
 
 
@@ -401,7 +398,6 @@ fd.append('opstina', this.opstina);
             }
           }).then(response => {
             this.opstine = response.data.opstine;
-            console.log(response.data);
           });
 
         },100)

@@ -71,7 +71,7 @@
                     Izmeni
                   </v-tooltip>
                   <v-tooltip bottom>
-                    <v-btn slot="activator" v-if="faktura.fak_status==2" large icon>
+                    <v-btn slot="activator" @click="izbrisiRadnuVerzijuFakture(faktura.fak_id)" v-if="faktura.fak_status==2" large icon>
                       <v-icon size="35px" color="primary">delete</v-icon>
                     </v-btn>
                     Izbrisi
@@ -159,7 +159,7 @@
               <v-text-field v-model="proizvodJedinicaMere" label="Jedinica mere"></v-text-field>
             </v-flex>
             <v-flex md2 mr-5>
-              <v-text-field v-model="proizvodJedinicnaCena" type="number" label="Jedinicna cena"></v-text-field>
+              <v-text-field v-model="proizvodJedinicnaCena" type="number"  label="Jedinicna cena (RSD)"></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout row wrap justify-center>
@@ -286,6 +286,18 @@ export default {
 
   },
   methods: {
+
+    izbrisiRadnuVerzijuFakture(fakId){
+      axios.delete("http://837s121.mars-e1.mars-hosting.com/deleteTemplate", {
+      params:{  sid: localStorage.getItem('sessionid'),
+        fakId}
+
+      }).then(response => {
+
+        this.preuzmiFakture();
+      });
+
+    },
     kreirajNovuFakturu() {
       this.novafaktura = !this.novafaktura;
       this.datumValute = null;
@@ -304,7 +316,7 @@ export default {
           sid: localStorage.getItem('sessionid')
         }
       }).then(response => {
-        console.log(response.data);
+
         // MENJAM FORMAT DATUMA GDE POSTOJI I KONTROLISEM DA LI POSTOJI BROJ FAKTURE
         for (var faktura of response.data.fakture) {
           faktura.isteklaValuta = false;
@@ -332,7 +344,7 @@ export default {
           }
         }
         this.fakture = response.data.fakture;
-        console.log(this.fakture);
+
 
       });
     },
@@ -451,46 +463,20 @@ export default {
               fakId: this.idFakture
             })
             .then(response => {
-              console.log(response.data);
+
               this.preuzmiFakture();
               this.novafaktura = true;
             });
         }
         this.proizvodi=[];
         this.ukupno=0;
-        //   }
-        // }
-        // FAKTURA SE CUVA KAO NACRT
-        // else{
-        //
-        //   // PROVERA DA LI SU DATUMI UNESENI
-        //   if(this.datumPrometa!==null && this.datumValute!==null){
-        //     // PROVERA DA LI DATUM PROMETA IDE PRE DATUMA VALUTE
-        //     if(new Date(this.datumPrometa)>new Date(this.datumValute)){
-        //       alert('Datum valute ne moze biti pre datuma prometa!');
-        //       // ZUSTAVLJAM FUNKCIJU
-        //       return false;
-        //     }
-        //   }
-        //   if(this.komitentId==='' && this.mesto===''){
-        //     alert('Morate odabrati komitenta i mesto prometa!');
-        //   }
-        //   else if(this.komitentId===''){
-        //     alert('Morate odabrati komitenta!');
-        //   }
-        //   else if(this.mesto===''){
-        //     alert('Morate odabrati mesto prometa!');
-        //   }
-        //   else{
-        //
-        //   }
-        // }
+
       }
     },
     dugmeStoriniranjeFakture(faktura) {
       this.odabranaFaktura = faktura;
       this.modal2 = true;
-      console.log(this.odabranaFaktura);
+
     },
     storiniranjeFakture(n) {
       if (n) {
@@ -499,7 +485,7 @@ export default {
             fakId: this.odabranaFaktura.fak_id
           })
           .then(response => {
-            console.log(response.data);
+
             this.preuzmiFakture();
           });
       }
@@ -511,7 +497,7 @@ export default {
     this.danasnjiDatum = new Date().toISOString().split('T')[0]
 
     this.datumPrometa = new Date().toISOString().split('T')[0]
-    console.log(this.danasnjiDatum);
+
     axios.get("http://837s121.mars-e1.mars-hosting.com/getComittents", {
       params: {
         sid: localStorage.getItem('sessionid')
@@ -534,9 +520,7 @@ export default {
   display: none;
 }
 
-/* .listaFaktura{
-  opacity:0.6;
-} */
+
 .storno {
   color: #f10000;
   border: 3px ridge #f10000;

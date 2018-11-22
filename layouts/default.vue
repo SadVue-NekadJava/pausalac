@@ -143,7 +143,6 @@
    watch: {
      log1 (newCount, oldCount) {
 this.logged= newCount;
-       console.log(newCount);
      }
 
   },
@@ -151,7 +150,6 @@ this.logged= newCount;
     mounted(){
       if(  window.localStorage.getItem("sessionid")!=null){
       this.$store.commit('change');
-      console.log(this.$store.state.logged);
       this.logged=this.$store.state.logged;
       }
     },
