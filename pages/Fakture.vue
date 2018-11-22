@@ -112,7 +112,7 @@
           </v-layout>
           <v-layout row wrap>
             <v-flex xs12>
-              <v-select :rules="obaveznoPoljeRules" light class="pa-3" :items="komitenti" item-text="kom_naziv" item-value="kom_id" v-model="komitentId" label=" Komitent"></v-select>
+              <v-select :rules="obaveznoPoljeRules" light class="pa-3" :items="komitenti" item-text="kom_naziv" item-value="kom_id" v-model="komitentId" label=" Komitent" no-data-text="Trenutno nema stavki."></v-select>
             </v-flex>
           </v-layout>
           <v-layout row wrap>
