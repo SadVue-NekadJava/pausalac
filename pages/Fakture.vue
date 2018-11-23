@@ -5,7 +5,7 @@
       <v-flex v-if="novafaktura" class="forma pa-4" xs12 sm8 offset-sm2>
         <v-expansion-panel popout>
           <v-layout align-center justify-center row wrap class="mb-1">
-            <v-btn class="success mb-3 mt-0" @click="kreirajNovuFakturu" v-if="novafaktura">Kreiraj novu Fakturu</v-btn>
+            <v-btn class="success mb-3 mt-0" @click="novaFakturaDugme" v-if="novafaktura">Kreiraj novu Fakturu</v-btn>
           </v-layout>
           <v-expansion-panel-content class=" listaFaktura" v-for="(faktura,index) in fakture" :key="faktura.id">
             <div slot="header">
@@ -32,6 +32,7 @@
                 <h2 class="text-xs-center pb-3" v-else><em>{{faktura.fak_brojFakture}}</em></h2>
                 <v-data-table :items="faktura.stavkeFakture" class="elevation-1" hide-actions hide-headers no-data-text="Faktura nema stavke.">
                   <template slot="items" slot-scope="props">
+                    <td class="text-xs-center"> {{tipSelekt[props.item.usp_tip].tipTekst}}</td>
                     <td class="text-xs-center">{{ props.item.usp_naziv }}</td>
                     <td class="text-xs-center">{{ props.item.usp_cena|thousandSeparator }}</td>
                     <td class="text-xs-center">{{ props.item.usp_mera }}</td>
@@ -108,7 +109,7 @@
       <v-flex xs12 class="fadeIn text-xs-center" v-if="!novafaktura">
         <v-form v-model="valid" class="forma pa-3">
           <v-layout class="justify-end">
-            <v-icon @click="odustani" class="iks">clear</v-icon>
+            <v-icon @click="novaFakturaDugme" class="iks">clear</v-icon>
           </v-layout>
           <v-layout row wrap>
             <v-flex xs12>
@@ -147,18 +148,25 @@
             </v-flex>
           </v-layout>
           <v-layout row wrap justify-center>
-
-
             <v-flex md2 mr-5>
+              <v-select
+                :items="tipSelekt"
+                v-model="tipTrenutnaVrednost"
+                item-text="tipTekst"
+                item-value="tipVrednost"
+                :rules="selektRules"
+              ></v-select>
+            </v-flex>
+            <v-flex md2 mr-4>
               <v-text-field v-model="proizvodNazivUsluge" label="Naziv usluge/proizvoda"></v-text-field>
             </v-flex>
-            <v-flex md2 mr-5>
+            <v-flex md2 mr-4>
               <v-text-field v-model="proizvodKolicina" type="number" label="Kolicina"></v-text-field>
             </v-flex>
-            <v-flex md2 mr-5>
+            <v-flex md2 mr-4>
               <v-text-field v-model="proizvodJedinicaMere" label="Jedinica mere"></v-text-field>
             </v-flex>
-            <v-flex md2 mr-5>
+            <v-flex md2 mr-4>
               <v-text-field v-model="proizvodJedinicnaCena" type="number"  label="Jedinicna cena (RSD)"></v-text-field>
             </v-flex>
           </v-layout>
@@ -175,6 +183,8 @@
               <v-data-table :headers="headers" :items="proizvodi" hide-actions class="elevation-1" no-data-text="Trenutno nema stavki.">
                 <tr slot="items" slot-scope="props">
                   <td>{{ props.index+1 }}</td>
+                  <td class="text-xs-center" v-if="props.item.tip===0">Usluga</td>
+                  <td class="text-xs-center" v-if="props.item.tip===1">Proizvod</td>
                   <td class="text-xs-center">{{ props.item.naziv }}</td>
                   <td class="text-xs-center">{{ props.item.cena|thousandSeparator }}</td>
                   <td class="text-xs-center">{{ props.item.mera }}</td>
@@ -240,6 +250,11 @@ export default {
           width: '10px'
         },
         {
+          text: 'Proizvod/usluga',
+          value: "tip",
+          sortable: false
+        },
+        {
           text: 'Naziv proizvoda',
           value: "nazivProizvoda",
           sortable: false
@@ -281,7 +296,21 @@ export default {
       opisFakture: '',
       // BRISANJE/ARHIVIRANJE FAKTURE
       modal2: false,
-      odabranaFaktura: {}
+      odabranaFaktura: {},
+      tipTrenutnaVrednost: 0,
+      tipSelekt:[
+        {
+          tipTekst: 'Usluga',
+          tipVrednost: 0
+        },
+        {
+          tipTekst: 'Proizvod',
+          tipVrednost: 1
+        }
+      ],
+      selektRules: [
+        v => (v == 0 || v == 1) || 'Izaberite jednu od opcija'
+      ]
     }
 
   },
@@ -298,17 +327,18 @@ export default {
       });
 
     },
-    kreirajNovuFakturu() {
+    novaFakturaDugme() {
       this.novafaktura = !this.novafaktura;
       this.datumValute = null;
       this.mesto = '';
       this.proizvodi = [];
       this.ukupno = 0;
       this.komitentId = '';
-      this.proizvodNazivUsluge = '',
-        this.proizvodJedinicaMere = '',
-        this.proizvodKolicina = '',
-        this.proizvodJedinicnaCena = ''
+      this.proizvodNazivUsluge = '';
+      this.proizvodJedinicaMere = '';
+      this.proizvodKolicina = '';
+      this.proizvodJedinicnaCena = '';
+      this.tipPocetnaVrednost=0;
     },
     preuzmiFakture() {
       axios.get("http://837s121.mars-e1.mars-hosting.com/getInvoices", {
@@ -347,17 +377,6 @@ export default {
 
 
       });
-    },
-
-    odustani() {
-      this.novafaktura = true;
-      this.komitentId = '';
-      this.datumPrometa = '';
-      this.datumValute = '';
-      this.mesto = '';
-      this.proizvodi = [];
-      this.promenljiva = '';
-      this.ukupno = 0;
     },
     izmeniFakturu(index) {
       this.novafaktura = false;
@@ -399,6 +418,7 @@ export default {
         alert('Morate popuniti sve podatke vezane za proizvod!');
       } else {
         var noviProizvod = {
+          tip: this.tipTrenutnaVrednost,
           naziv: this.proizvodNazivUsluge,
           mera: this.proizvodJedinicaMere,
           kolicina: this.proizvodKolicina,
