@@ -183,8 +183,7 @@
               <v-data-table :headers="headers" :items="proizvodi" hide-actions class="elevation-1" no-data-text="Trenutno nema stavki.">
                 <tr slot="items" slot-scope="props">
                   <td>{{ props.index+1 }}</td>
-                  <td class="text-xs-center" v-if="props.item.tip===0">Usluga</td>
-                  <td class="text-xs-center" v-if="props.item.tip===1">Proizvod</td>
+                  <td class="text-xs-center">{{ tipSelekt[props.item.tip].tipTekst }}</td>
                   <td class="text-xs-center">{{ props.item.naziv }}</td>
                   <td class="text-xs-center">{{ props.item.cena|thousandSeparator }}</td>
                   <td class="text-xs-center">{{ props.item.mera }}</td>
