@@ -235,7 +235,7 @@ export default {
         this.komitentIdIzmena = 0;
         this.idKomitentaZaBrisanje = 0;
 
-          this.preuzmiKomitente();
+        setTimeout(this.preuzmiKomitente,100);
       });
   this.kreirajNovog=false;
     },

@@ -40,6 +40,7 @@
                     <td class="text-xs-center">{{ (props.item.usp_cena * props.item.usp_kolicina)|thousandSeparator}}</td>
                   </template>
                 </v-data-table>
+                <p class="faktura-opis"><em>Opis:</em> {{faktura.fak_uputstva}}</p>
                 <h2 class="pt-5 text-xs-center">Ukupna cena: {{faktura.fak_total|thousandSeparator}} RSD</h2>
                 <v-layout row wrap>
                   <v-flex xs7>
@@ -161,13 +162,13 @@
               <v-text-field v-model="proizvodNazivUsluge" label="Naziv usluge/proizvoda"></v-text-field>
             </v-flex>
             <v-flex md2 mr-4>
-              <v-text-field v-model="proizvodKolicina" type="number" label="Kolicina"></v-text-field>
+              <v-text-field v-model="proizvodJedinicnaCena" type="number"  label="Jedinicna cena (RSD)"></v-text-field>
             </v-flex>
             <v-flex md2 mr-4>
               <v-text-field v-model="proizvodJedinicaMere" label="Jedinica mere"></v-text-field>
             </v-flex>
             <v-flex md2 mr-4>
-              <v-text-field v-model="proizvodJedinicnaCena" type="number"  label="Jedinicna cena (RSD)"></v-text-field>
+              <v-text-field v-model="proizvodKolicina" type="number" label="Kolicina"></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout row wrap justify-center>
@@ -374,7 +375,6 @@ export default {
         }
         this.fakture = response.data.fakture;
 
-
       });
     },
     izmeniFakturu(index) {
@@ -384,6 +384,7 @@ export default {
       this.datumValute = this.fakture[index].fak_valuta;
       this.mesto = this.fakture[index].fak_mestoPrometa;
       this.idFakture = this.fakture[index].fak_id;
+      this.opisFakture = this.fakture[index].fak_uputstva;
       this.promenljiva = 1;
       for (var j = 0; j < this.fakture[index].stavkeFakture.length; j++) {
         this.ukupno += this.fakture[index].stavkeFakture[j].usp_cena * this.fakture[index].stavkeFakture[j].usp_kolicina;
@@ -392,7 +393,8 @@ export default {
           cena: this.fakture[index].stavkeFakture[j].usp_cena,
           mera: this.fakture[index].stavkeFakture[j].usp_mera,
           kolicina: this.fakture[index].stavkeFakture[j].usp_kolicina,
-          ukupnaCena: this.fakture[index].stavkeFakture[j].usp_cena * this.fakture[index].stavkeFakture[j].usp_kolicina
+          ukupnaCena: this.fakture[index].stavkeFakture[j].usp_cena * this.fakture[index].stavkeFakture[j].usp_kolicina,
+          tip: this.fakture[index].stavkeFakture[j].usp_tip
 
 
         })
@@ -576,6 +578,11 @@ export default {
   opacity: 0.9;
   border-radius: 6px;
   max-width: 100%;
+}
+.faktura-opis{
+  opacity: 1;
+  padding-left: 10px;
+  margin-top: 10px;
 }
 
 /* DUGME IKS PRILIKOM PRAVLJENJA FAKTURE */

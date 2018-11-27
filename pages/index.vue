@@ -375,6 +375,9 @@ export default {
         if (response.data.status) {
           this.$router.push('/');
         }
+        else{
+          alert(response.data.msg);
+        }
 
 
       });
