@@ -133,7 +133,7 @@
                 <p>datum izvrsenja</p>
               </v-flex>
 
-              <v-btn small flat  class="mt-4" color="success">Stampaj </v-btn>
+              <v-btn @click="stampaj(svrhaIsplateIzabrana.svrha-1)" small flat  class="mt-4" color="success">Stampaj </v-btn>
             <v-btn small flat @click="sacuvajIzmeneNaloga"  class="mt-4" color="primary">Sacuvaj </v-btn>
             </div>
 
@@ -147,7 +147,7 @@
   <div class="text-xs-center">
 
 
-    <v-btn @click="stampaj(5)" large  class="mt-4" color="success">Stampaj sve</v-btn>
+    <v-btn @click="stampaj(4)" large  class="mt-4" color="success">Stampaj sve</v-btn>
 
   </div>
 </v-container>
@@ -208,7 +208,7 @@ stampaj(tipUplatnice){
   axios.get("http://837s121.mars-e1.mars-hosting.com/getUrl", {
     params: {
       sid: localStorage.getItem('sessionid'),
-      tipUplatnice:2
+      tipUplatnice
     }
   }).then(response => {
     console.log(response.data);
